@@ -4,6 +4,7 @@ namespace LiveSource\Chord;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use LiveSource\Chord\Filament\Resources\PageResource;
 
 class ChordPlugin implements Plugin
 {
@@ -14,7 +15,9 @@ class ChordPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        //
+        $panel->resources([
+            PageResource::class
+        ]);
     }
 
     public function boot(Panel $panel): void

@@ -2,6 +2,7 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "dev:site": "npx tailwindcss -i resources/css/site.css -o resources/dist/site.css --postcss --watch",
         "dev:styles": "npx tailwindcss -i resources/css/index.css -o resources/dist/chord.css --postcss --watch",
         "dev:scripts": "node bin/build.js --dev",
         "build:styles": "npx tailwindcss -i resources/css/index.css -o resources/dist/chord.css --postcss --minify && npm run purge",

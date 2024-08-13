@@ -1,3 +1,4 @@
+@props(['page'])
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -6,10 +7,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://use.typekit.net/ins2wgm.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <title>{{ $title ?? 'Page Title' }}</title>
+    <title>{{ $page->title ?? 'Page Title' }}</title>
 </head>
 <body class="bg-gray-50">
-@include('chord::components.site.partials.header')
+<x-chord::site.partials.header />
 {{ $slot }}
 </body>
 </html>

@@ -1,8 +1,5 @@
-<x-chord::site.page.layout>
+<x-chord::site.page.layout :page="$page">
 <div>
-    This is the page component
-
-    {{ $page->toJson() }}
-
+    <x-chord::site.page.blocks :page="$page" />
 </div>
 </x-chord::site.page.layout>

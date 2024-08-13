@@ -9,6 +9,8 @@ use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Filesystem\Filesystem;
+use LiveSource\Chord\Blocks\CallToAction;
+use LiveSource\Chord\Blocks\RichContent;
 use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
@@ -63,6 +65,11 @@ class ChordServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
+        \LiveSource\Chord\Facades\Chord::registerBlockTypes([
+            RichContent::class,
+            CallToAction::class,
+        ]);
+
         // Asset Registration
         FilamentAsset::register(
             $this->getAssets(),
