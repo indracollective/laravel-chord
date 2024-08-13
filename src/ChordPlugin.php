@@ -1,15 +1,15 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace LiveSource\Chord;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 
-class SkeletonPlugin implements Plugin
+class ChordPlugin implements Plugin
 {
     public function getId(): string
     {
-        return 'skeleton';
+        return 'chord';
     }
 
     public function register(Panel $panel): void
@@ -19,7 +19,7 @@ class SkeletonPlugin implements Plugin
 
     public function boot(Panel $panel): void
     {
-        //
+
     }
 
     public static function make(): static

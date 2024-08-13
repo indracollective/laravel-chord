@@ -1,6 +1,6 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace LiveSource\Chord;
 
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
@@ -13,14 +13,14 @@ use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VendorName\Skeleton\Commands\SkeletonCommand;
-use VendorName\Skeleton\Testing\TestsSkeleton;
+use LiveSource\Chord\Commands\ChordCommand;
+use LiveSource\Chord\Testing\TestsChord;
 
-class SkeletonServiceProvider extends PackageServiceProvider
+class ChordServiceProvider extends PackageServiceProvider
 {
-    public static string $name = 'skeleton';
+    public static string $name = 'chord';
 
-    public static string $viewNamespace = 'skeleton';
+    public static string $viewNamespace = 'chord';
 
     public function configurePackage(Package $package): void
     {
@@ -31,12 +31,13 @@ class SkeletonServiceProvider extends PackageServiceProvider
          */
         $package->name(static::$name)
             ->hasCommands($this->getCommands())
+            ->hasRoutes($this->getRoutes())
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command
                     ->publishConfigFile()
                     ->publishMigrations()
                     ->askToRunMigrations()
-                    ->askToStarRepoOnGitHub(':vendor_slug/:package_slug');
+                    ->askToStarRepoOnGitHub('livesource/chord');
             });
 
         $configFileName = $package->shortName();
@@ -80,18 +81,18 @@ class SkeletonServiceProvider extends PackageServiceProvider
         if (app()->runningInConsole()) {
             foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
                 $this->publishes([
-                    $file->getRealPath() => base_path("stubs/skeleton/{$file->getFilename()}"),
-                ], 'skeleton-stubs');
+                    $file->getRealPath() => base_path("stubs/chord/{$file->getFilename()}"),
+                ], 'chord-stubs');
             }
         }
 
         // Testing
-        Testable::mixin(new TestsSkeleton);
+        Testable::mixin(new TestsChord);
     }
 
     protected function getAssetPackageName(): ?string
     {
-        return ':vendor_slug/:package_slug';
+        return 'livesource/chord';
     }
 
     /**
@@ -100,9 +101,9 @@ class SkeletonServiceProvider extends PackageServiceProvider
     protected function getAssets(): array
     {
         return [
-            // AlpineComponent::make('skeleton', __DIR__ . '/../resources/dist/components/skeleton.js'),
-            Css::make('skeleton-styles', __DIR__ . '/../resources/dist/skeleton.css'),
-            Js::make('skeleton-scripts', __DIR__ . '/../resources/dist/skeleton.js'),
+            // AlpineComponent::make('chord', __DIR__ . '/../resources/dist/components/chord.js'),
+            Css::make('chord-styles', __DIR__ . '/../resources/dist/chord.css'),
+            Js::make('chord-scripts', __DIR__ . '/../resources/dist/chord.js'),
         ];
     }
 
@@ -112,7 +113,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
     protected function getCommands(): array
     {
         return [
-            SkeletonCommand::class,
+            ChordCommand::class,
         ];
     }
 
@@ -129,7 +130,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
      */
     protected function getRoutes(): array
     {
-        return [];
+        return ['web'];
     }
 
     /**
@@ -146,7 +147,7 @@ class SkeletonServiceProvider extends PackageServiceProvider
     protected function getMigrations(): array
     {
         return [
-            'create_skeleton_table',
+            'create_chord_table',
         ];
     }
 }
