@@ -8,10 +8,12 @@ use Spatie\LaravelData\Data;
 abstract class Block extends Data
 {
     protected static string $component = '';
+
     public static function getLabel(): string
     {
         return str((new \ReflectionClass(static::class))->getShortName())->headline()->toString();
     }
+
     public static function getName(): string
     {
         return static::class;
@@ -21,6 +23,7 @@ abstract class Block extends Data
     {
         return [];
     }
+
     public static function getBuilderBlock(): BuilderBlock
     {
         return BuilderBlock::make(static::class)

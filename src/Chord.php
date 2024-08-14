@@ -5,10 +5,8 @@ namespace LiveSource\Chord;
 class Chord
 {
     protected array $blockTypes = [];
-    public function __construct()
-    {
 
-    }
+    public function __construct() {}
 
     public function getBlockTypes(): array
     {

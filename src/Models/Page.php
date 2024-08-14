@@ -12,14 +12,15 @@ use Spatie\EloquentSortable\SortableTrait;
 
 class Page extends Model implements Sortable
 {
-    use HasFactory, SortableTrait;
+    use HasFactory;
+    use SortableTrait;
 
     protected $fillable = [
         'title',
         'slug',
         'blocks',
         'parent_id',
-        'order_column'
+        'order_column',
     ];
 
     public function parent(): BelongsTo
@@ -43,9 +44,10 @@ class Page extends Model implements Sortable
 
     public function blockData(): Collection
     {
-        return collect($this->blocks ?? [] )->map(function ($block) {
+        return collect($this->blocks ?? [])->map(function ($block) {
             $type = $block['type'] ?? null;
             $obj = $type::from($block['data']);
+
             return $obj;
         });
     }

@@ -11,12 +11,12 @@ use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Filesystem\Filesystem;
 use LiveSource\Chord\Blocks\CallToAction;
 use LiveSource\Chord\Blocks\RichContent;
+use LiveSource\Chord\Commands\ChordCommand;
+use LiveSource\Chord\Testing\TestsChord;
 use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use LiveSource\Chord\Commands\ChordCommand;
-use LiveSource\Chord\Testing\TestsChord;
 
 class ChordServiceProvider extends PackageServiceProvider
 {

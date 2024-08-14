@@ -3,9 +3,6 @@
 namespace LiveSource\Chord\Filament\Resources;
 
 use CodeWithDennis\FilamentSelectTree\SelectTree;
-use LiveSource\Chord\Facades\Chord;
-use LiveSource\Chord\Filament\Resources\PageResource\Pages;
-use LiveSource\Chord\Filament\Resources\PageResource\RelationManagers;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
@@ -15,6 +12,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Models\Page;
 
 class PageResource extends Resource
@@ -56,10 +54,10 @@ class PageResource extends Resource
                                 Section::make('blocks-section')
                                     ->schema([
                                         Builder::class::make('blocks')
-                                            ->blocks($blockTypes)
-                                    ])
+                                            ->blocks($blockTypes),
+                                    ]),
                             ]),
-                    ])
+                    ]),
 
             ]);
     }
@@ -71,7 +69,7 @@ class PageResource extends Resource
             ->defaultSort('order_column')
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->getStateUsing(function(Page $record) {
+                    ->getStateUsing(function (Page $record) {
                         return self::getNestedPrefix($record->id) . ($record->parent_id ? '--&nbsp;' : '') . $record->title;
                     })
                     ->html(),
@@ -97,14 +95,19 @@ class PageResource extends Resource
             ]);
     }
 
-    private static function getNestedPrefix($parent_id, $prefix=''): string
+    private static function getNestedPrefix($parent_id, $prefix = ''): string
     {
         static $parents = null;
-        if ($parents==null)
+        if ($parents == null) {
             $parents = self::$model::all()->pluck('parent_id', 'id');
-        if ($parent_id==0) return '';
-        if (isset($parents[$parent_id]) && $parents[$parent_id])
-            $prefix .= self::getNestedPrefix($parents[$parent_id], $prefix.'&nbsp;&nbsp;');
+        }
+        if ($parent_id == 0) {
+            return '';
+        }
+        if (isset($parents[$parent_id]) && $parents[$parent_id]) {
+            $prefix .= self::getNestedPrefix($parents[$parent_id], $prefix . '&nbsp;&nbsp;');
+        }
+
         return $prefix;
     }
 

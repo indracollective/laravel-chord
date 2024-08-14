@@ -11,12 +11,12 @@ class PageController extends Controller
     public function __invoke(string $url = '/')
     {
         $page = Page::firstWhere('slug', $url);
-        if (!$page) {
+        if (! $page) {
             abort(404);
         }
 
         return view('chord::components.site.page.index', [
-            'page' => $page
+            'page' => $page,
         ]);
     }
 }
