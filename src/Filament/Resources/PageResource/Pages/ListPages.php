@@ -7,6 +7,7 @@ use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use LiveSource\Chord\Filament\Resources\PageResource;
+use LiveSource\Chord\Models\Page;
 
 class ListPages extends ListRecords
 {
@@ -20,6 +21,11 @@ class ListPages extends ListRecords
         return [
             Actions\CreateAction::make(),
         ];
+    }
+
+    public function reorderTable(array $order): void
+    {
+        Page::setNewOrder($order);
     }
 
     protected function getTableQuery(): Builder
