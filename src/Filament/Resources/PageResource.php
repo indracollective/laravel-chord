@@ -2,6 +2,7 @@
 
 namespace LiveSource\Chord\Filament\Resources;
 
+use CodeWithDennis\FilamentSelectTree\SelectTree;
 use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Filament\Resources\PageResource\Pages;
 use LiveSource\Chord\Filament\Resources\PageResource\RelationManagers;
@@ -50,6 +51,8 @@ class PageResource extends Resource
                                     })
                                     ->reactive()
                                     ->required(),
+                                SelectTree::make('parent_id')
+                                    ->relationship('parent', 'title', 'parent_id'),
                                 Section::make('blocks-section')
                                     ->schema([
                                         Builder::class::make('blocks')
@@ -64,9 +67,19 @@ class PageResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->reorderable('order_column')
+            ->defaultSort('order_column')
             ->columns([
-                Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\TextColumn::make('title')
+                    ->getStateUsing(function(Page $record) {
+                        return self::getNestedPrefix($record->id) . ($record->parent_id ? '--&nbsp;' : '') . $record->title;
+                    })
+                    ->html(),
                 Tables\Columns\TextColumn::make('slug'),
+                Tables\Columns\TextColumn::make('id'),
+                Tables\Columns\TextColumn::make('parent_id'),
+                Tables\Columns\TextColumn::make('order_column'),
+
             ])
             ->filters([
                 //
@@ -84,6 +97,17 @@ class PageResource extends Resource
             ]);
     }
 
+    private static function getNestedPrefix($parent_id, $prefix=''): string
+    {
+        static $parents = null;
+        if ($parents==null)
+            $parents = self::$model::all()->pluck('parent_id', 'id');
+        if ($parent_id==0) return '';
+        if (isset($parents[$parent_id]) && $parents[$parent_id])
+            $prefix .= self::getNestedPrefix($parents[$parent_id], $prefix.'&nbsp;&nbsp;');
+        return $prefix;
+    }
+
     public static function getRelations(): array
     {
         return [
@@ -98,6 +122,7 @@ class PageResource extends Resource
             'create' => PageResource\Pages\CreatePage::route('/create'),
             'edit' => PageResource\Pages\EditPage::route('/{record}/edit'),
             'visual' => PageResource\Pages\VisualEditPage::route('/{record}/visual'),
+            'test' => PageResource\Pages\TestPage::route('/test'),
         ];
     }
 }

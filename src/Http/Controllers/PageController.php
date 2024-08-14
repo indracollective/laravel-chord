@@ -2,7 +2,8 @@
 
 namespace LiveSource\Chord\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+//use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use LiveSource\Chord\Models\Page;
 
 class PageController extends Controller

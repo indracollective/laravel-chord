@@ -1,1 +1,7 @@
 @import '../../vendor/filament/filament/resources/css/theme.css';
+
+body.chord {
+    .fi-sidebar-nav {
+        display: none;
+    }
+}

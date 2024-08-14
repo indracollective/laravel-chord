@@ -7,16 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Spatie\EloquentSortable\Sortable;
+use Spatie\EloquentSortable\SortableTrait;
 
-class Page extends Model
+class Page extends Model implements Sortable
 {
-    use HasFactory;
+    use HasFactory, SortableTrait;
 
     protected $fillable = [
         'title',
         'slug',
         'blocks',
-        'parent_id'
+        'parent_id',
+        'order_column'
     ];
 
     public function parent(): BelongsTo
@@ -31,6 +34,11 @@ class Page extends Model
     public function children(): HasMany
     {
         return $this->hasMany(static::class, 'parent_id');
+    }
+
+    public function buildSortQuery()
+    {
+        return static::query()->where('parent_id', $this->parent_id);
     }
 
     public function blockData(): Collection
