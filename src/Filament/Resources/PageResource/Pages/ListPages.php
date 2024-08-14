@@ -24,6 +24,7 @@ class ListPages extends ListRecords
 
     public function reorderTable(array $order): void
     {
+
         Page::setNewOrder($order);
     }
 
