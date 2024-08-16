@@ -14,9 +14,9 @@ abstract class Block extends Data
         return str((new \ReflectionClass(static::class))->getShortName())->headline()->toString();
     }
 
-    public static function getName(): string
+    public static function getDefaultKey(): string
     {
-        return static::class;
+        return str((new \ReflectionClass(static::class))->getShortName())->toString();
     }
 
     public static function getSchema(): array

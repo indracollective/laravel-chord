@@ -2,26 +2,57 @@
 
 namespace LiveSource\Chord;
 
+use Illuminate\Support\Arr;
+
 class Chord
 {
     protected array $blockTypes = [];
 
+    protected array $pageTypes = [];
+
     public function __construct() {}
+
+    public function registerPageType(string $class, ?string $key): void
+    {
+        $this->pageTypes[$key ?? $class::getDefaultKey()] = $class;
+    }
+
+    public function registerPageTypes(array $types): void
+    {
+        foreach ($types as $key => $class) {
+            $this->registerPageType($class, is_string($key) ? $key : null);
+        }
+    }
+
+    public function registerBlockType(string $class, ?string $key): void
+    {
+        $this->blockTypes[$key ?? $class::getDefaultKey()] = $class;
+    }
+
+    public function registerBlockTypes(array $types): void
+    {
+        foreach ($types as $key => $class) {
+            $this->registerBlockType($class, is_string($key) ? $key : null);
+        }
+    }
 
     public function getBlockTypes(): array
     {
         return $this->blockTypes;
     }
 
-    public function registerBlockType($type): void
+    public function getBlockClass(string $key): ?string
     {
-        $this->blockTypes[$type::getName()] = $type;
+        return Arr::get($this->blockTypes, $key);
     }
 
-    public function registerBlockTypes(array $types): void
+    public function getPageClass(string $key): ?string
     {
-        foreach ($types as $type) {
-            $this->registerBlockType($type);
-        }
+        return Arr::get($this->pageTypes, $key);
+    }
+
+    public function getPageTypes(): array
+    {
+        return $this->pageTypes;
     }
 }

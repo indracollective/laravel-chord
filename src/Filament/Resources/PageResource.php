@@ -25,8 +25,8 @@ class PageResource extends Resource
     {
         return Tabs::make('Tabs')
             ->tabs([
-                $this->generalFormTab($form),
-                $this->seoFormTab($form),
+                static::settingsFormTab($form),
+                static::contentFormTab($form),
             ]);
     }
 
@@ -34,6 +34,7 @@ class PageResource extends Resource
     {
         return Tab::make('Settings')->schema([
             Fieldset::make('General')->schema([
+
                 TextInput::make('title')->required(),
                 TextInput::make('slug')->required(),
                 SelectTree::make('parent_id')
