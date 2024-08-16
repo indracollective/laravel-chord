@@ -32,37 +32,40 @@ class PageResource extends Resource
             ]);
     }
 
-    public static function generalFormTab(Form $form): Tabs
+    public static function settingsFormTab(Form $form): Tabs
     {
-        return Tab::make('General')->schema([
-
+        return Tab::make('Settings')->schema([
+            Fieldset::make('General')->schema([
+                TextInput::make('title')->required(),
+                TextInput::make('slug')->required(),
+                SelectTree::make('parent_id')
+                    ->relationship('parent', 'title', 'parent_id'),
+            ]),
+            Fieldset::make('Seo')->schema([
+                TextInput::make('meta_title'),
+                TextInput::make('meta_description'),
+            ])
         ]);
     }
 
-    public static function seoFormTab(Form $form): Tabs
-    {
-        return Tab::make('Seo')->schema([
-
-        ]);
-    }
-
-    public static function form(Form $form): Form
+    public static function contentFormTab(Form $form): Tabs
     {
         $blockTypes = collect(Chord::getBlockTypes())->map(function ($type) {
             return $type::getBuilderBlock();
         })->toArray();
 
+        return Tab::make('Seo')->schema([
+            Section::make('blocks-section')
+                ->schema([
+                    Builder::class::make('blocks')
+                        ->blocks($blockTypes),
+                ]),
+        ]);
+    }
+
+    public static function form(Form $form): Form
+    {
         return $form->schema([ static::formTabs($form) ]);
-            TextInput::make('title')->required(),
-            TextInput::make('slug')->required(),
-                SelectTree::make('parent_id')
-                    ->relationship('parent', 'title', 'parent_id'),
-                Section::make('blocks-section')
-                    ->schema([
-                        Builder::class::make('blocks')
-                            ->blocks($blockTypes),
-                    ]),
-            ]);
     }
 
     public static function table(Table $table): Table
