@@ -4,7 +4,6 @@ namespace LiveSource\Chord\Filament\Resources;
 
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms\Components\Builder;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
@@ -13,7 +12,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Support\Str;
 use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Models\Page;
 
@@ -44,7 +42,7 @@ class PageResource extends Resource
             Fieldset::make('Seo')->schema([
                 TextInput::make('meta_title'),
                 TextInput::make('meta_description'),
-            ])
+            ]),
         ]);
     }
 
@@ -65,7 +63,7 @@ class PageResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form->schema([ static::formTabs($form) ]);
+        return $form->schema([static::formTabs($form)]);
     }
 
     public static function table(Table $table): Table
@@ -76,7 +74,7 @@ class PageResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->getStateUsing(function (Page $record) {
-                        return self::getNestedPrefix($record->id).($record->parent_id ? '--&nbsp;' : '').$record->title;
+                        return self::getNestedPrefix($record->id) . ($record->parent_id ? '--&nbsp;' : '') . $record->title;
                     })
                     ->html(),
                 Tables\Columns\TextColumn::make('slug'),
@@ -89,7 +87,7 @@ class PageResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('visual')
                     ->label('Visual edit')
-                    ->url(fn(Page $record): string => route('filament.admin.resources.pages.visual', $record)),
+                    ->url(fn (Page $record): string => route('filament.admin.resources.pages.visual', $record)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -100,6 +98,7 @@ class PageResource extends Resource
                 if (request()->has('parent')) {
                     return $query->where('parent_id', request()->get('parent'));
                 }
+
                 return $query->where('parent_id', null);
             });
     }

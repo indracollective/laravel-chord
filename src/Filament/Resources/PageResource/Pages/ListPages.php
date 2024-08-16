@@ -4,8 +4,6 @@ namespace LiveSource\Chord\Filament\Resources\PageResource\Pages;
 
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use LiveSource\Chord\Models\Page;
 
