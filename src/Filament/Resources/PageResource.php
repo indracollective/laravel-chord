@@ -36,7 +36,14 @@ class PageResource extends Resource
     {
         return Tab::make('General')->schema([
 
-        ])
+        ]);
+    }
+
+    public static function seoFormTab(Form $form): Tabs
+    {
+        return Tab::make('Seo')->schema([
+
+        ]);
     }
 
     public static function form(Form $form): Form
