@@ -55,4 +55,9 @@ class Chord
     {
         return $this->pageTypes;
     }
+
+    public function getPageTypeOptionsForSelect(): array
+    {
+        return Arr::mapWithKeys($this->pageTypes, fn ($class, $key) => [$key => $class::getLabel()]);
+    }
 }

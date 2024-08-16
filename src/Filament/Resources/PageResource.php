@@ -4,7 +4,9 @@ namespace LiveSource\Chord\Filament\Resources;
 
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms\Components\Builder;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -25,16 +27,16 @@ class PageResource extends Resource
     {
         return Tabs::make('Tabs')
             ->tabs([
-                static::settingsFormTab($form),
                 static::contentFormTab($form),
+                static::settingsFormTab($form),
             ]);
     }
 
-    public static function settingsFormTab(Form $form): Tabs
+    public static function settingsFormTab(Form $form): Tabs\Tab
     {
-        return Tab::make('Settings')->schema([
+        return Tabs\Tab::make('Settings')->schema([
             Fieldset::make('General')->schema([
-
+                Select::make('page_type')->options(Chord::getPageTypeOptionsForSelect()),
                 TextInput::make('title')->required(),
                 TextInput::make('slug')->required(),
                 SelectTree::make('parent_id')
@@ -47,13 +49,13 @@ class PageResource extends Resource
         ]);
     }
 
-    public static function contentFormTab(Form $form): Tabs
+    public static function contentFormTab(Form $form): Tabs\Tab
     {
         $blockTypes = collect(Chord::getBlockTypes())->map(function ($type) {
             return $type::getBuilderBlock();
         })->toArray();
 
-        return Tab::make('Seo')->schema([
+        return Tabs\Tab::make('Content')->schema([
             Section::make('blocks-section')
                 ->schema([
                     Builder::class::make('blocks')
@@ -73,11 +75,7 @@ class PageResource extends Resource
             ->reorderable('order_column')
             ->defaultSort('order_column')
             ->columns([
-                Tables\Columns\TextColumn::make('title')
-                    ->getStateUsing(function (Page $record) {
-                        return self::getNestedPrefix($record->id) . ($record->parent_id ? '--&nbsp;' : '') . $record->title;
-                    })
-                    ->html(),
+                Tables\Columns\TextColumn::make('title'),
                 Tables\Columns\TextColumn::make('slug'),
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('parent_id'),
