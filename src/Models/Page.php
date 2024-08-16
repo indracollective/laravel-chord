@@ -46,7 +46,7 @@ class Page extends Model implements Sortable
     public function blockData(): Collection
     {
         return collect($this->blocks ?? [])->map(function ($block) {
-            if (!$class = Chord::getBlockClass($block['type'])) {
+            if (! $class = Chord::getBlockClass($block['type'])) {
                 throw new \Exception("Block Class for key '{$block['type']}' does not exist");
             }
 
