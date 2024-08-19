@@ -60,12 +60,22 @@ class PageResource extends Resource
     public static function formFields(Form $form): array
     {
         return [
+<<<<<<< Updated upstream
             Split::make([
                 Section::make('main')
                     ->schema($form->getRecord()->typeObject()->schema()),
                 Section::make('preview')
                     ->schema([]),
             ]),
+=======
+
+                Grid::make(['default' => 1])
+                    ->schema($form->getRecord()->typeObject()->getSchema())
+                    ->hiddenLabel(true)
+                    ->grow()
+                    ->columnSpanFull(),
+
+>>>>>>> Stashed changes
         ];
     }
 
@@ -92,18 +102,23 @@ class PageResource extends Resource
             ->reorderable('order_column')
             ->defaultSort('order_column')
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('title'),
                 Tables\Columns\TextColumn::make('slug'),
-                Tables\Columns\TextColumn::make('id'),
+                Tables\Columns\TextColumn::make('type'),
                 Tables\Columns\TextColumn::make('parent_id'),
                 Tables\Columns\TextColumn::make('order_column'),
 
             ])
             ->actions([
+<<<<<<< Updated upstream
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('visual')
                     ->label('Visual edit')
                     ->url(fn (Page $record): string => route('filament.admin.resources.pages.visual', $record)),
+=======
+                Tables\Actions\EditAction::make()
+>>>>>>> Stashed changes
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

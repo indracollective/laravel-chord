@@ -15,4 +15,9 @@ abstract class PageType extends Data
     {
         return str((new \ReflectionClass(static::class))->getShortName())->toString();
     }
+
+    public function getSchema(): array
+    {
+        return [];
+    }
 }

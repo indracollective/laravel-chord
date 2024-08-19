@@ -10,6 +10,8 @@ class EditPage extends EditRecord
 {
     protected static string $resource = PageResource::class;
 
+    protected static string $view = 'chord::cms.edit-page';
+
     protected ?string $maxContentWidth = 'full';
 
     protected function getHeaderActions(): array

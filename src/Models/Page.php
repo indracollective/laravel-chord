@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use LiveSource\Chord\Chord;
+use LiveSource\Chord\Facades\Chord as ChordFacade;
 use Livesource\Chord\PageTypes\PageType;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
@@ -21,9 +22,10 @@ class Page extends Model implements Sortable
     protected $fillable = [
         'title',
         'slug',
-        'blocks',
+        'data',
         'parent_id',
         'order_column',
+        'type'
     ];
 
     public function parent(): BelongsTo
@@ -32,7 +34,7 @@ class Page extends Model implements Sortable
     }
 
     protected $casts = [
-        'blocks' => 'array',
+        'data' => 'array',
     ];
 
     public function children(): HasMany
@@ -45,6 +47,7 @@ class Page extends Model implements Sortable
         return static::query()->where('parent_id', $this->parent_id);
     }
 
+<<<<<<< Updated upstream
     public function blockData(): Collection
     {
         return collect($this->blocks ?? [])->map(function ($block) {
@@ -60,9 +63,16 @@ class Page extends Model implements Sortable
     {
         if (! $class = Chord::getPageTypeClass($this->page_type)) {
             throw new \Exception("Page Type Class for key '{$this->page_type}' does not exist");
+=======
+    public function typeObject(): PageType | null
+    {
+        // todo - this should be cached
+        if (!$class = ChordFacade::getPageTypeClass($this->type)) {
+            throw new \Exception("Page Type Class for key '{$this->type}' does not exist. Registered types are " . implode(', ', array_keys(ChordFacade::getPageTypes())));
+>>>>>>> Stashed changes
         }
 
-        return $class::from($this->type_data ?? []);
+        return $class::from($this->data ?? []);
     }
 
     public function configureForm(Form $form): void {}
