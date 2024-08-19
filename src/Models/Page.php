@@ -48,6 +48,7 @@ class Page extends Model implements Sortable
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public function blockData(): Collection
     {
         return collect($this->blocks ?? [])->map(function ($block) {
@@ -64,11 +65,16 @@ class Page extends Model implements Sortable
         if (! $class = Chord::getPageTypeClass($this->page_type)) {
             throw new \Exception("Page Type Class for key '{$this->page_type}' does not exist");
 =======
+=======
+>>>>>>> Stashed changes
     public function typeObject(): PageType | null
     {
         // todo - this should be cached
         if (!$class = ChordFacade::getPageTypeClass($this->type)) {
             throw new \Exception("Page Type Class for key '{$this->type}' does not exist. Registered types are " . implode(', ', array_keys(ChordFacade::getPageTypes())));
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
 

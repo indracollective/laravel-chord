@@ -11,16 +11,12 @@ class PageBuilder extends Builder
     {
         parent::setUp();
 
-<<<<<<< Updated upstream
         if (! $this->getBlocks()) {
-=======
-
->>>>>>> Stashed changes
             $blocks = collect(Chord::getBlockTypes())->map(function ($type) {
                 return $type::getBuilderBlock();
             })->toArray();
 
             $this->blocks($blocks);
-
+        }
     }
 }

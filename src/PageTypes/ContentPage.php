@@ -2,14 +2,10 @@
 
 namespace Livesource\Chord\PageTypes;
 
-<<<<<<< Updated upstream
-=======
 use Illuminate\Support\Collection;
 use LiveSource\Chord\Chord;
-use Livesource\Chord\Data\LinkData;
 use Livesource\Chord\Filament\Forms\PageBuilder;
 
->>>>>>> Stashed changes
 class ContentPage extends PageType
 {
     public function __construct(

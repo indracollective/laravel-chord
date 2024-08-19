@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resizable Split Pane</title>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.x.x/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="h-screen flex">
+
+<!-- Split Pane Container -->
+<div x-data="{ leftWidth: '50%', resizing: false }"
+     class="flex w-full h-full"
+     @mousemove.window="if (resizing) { leftWidth = `${($event.clientX / $el.clientWidth) * 100}%` }"
+     @mouseup.window="resizing = false">
+
+    <!-- Left Pane -->
+    <div :style="'width: ' + leftWidth" class="bg-gray-200 p-4">
+        Left Pane
+    </div>
+
+    <!-- Resizer -->
+    <div
+        @mousedown="resizing = true"
+        class="bg-gray-500 cursor-col-resize w-1"
+        style="min-width: 5px;"
+    ></div>
+
+    <!-- Right Pane -->
+    <div class="flex-1 bg-gray-100 p-4">
+        Right Pane
+    </div>
+</div>
+
+</body>
+</html>

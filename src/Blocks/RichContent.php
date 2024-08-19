@@ -10,12 +10,16 @@ class RichContent extends Block
 {
     protected static string $component = 'chord::blocks.rich-content';
 
-    public function __construct(public string $title, public string $content) {}
+    public function __construct(public string $title, public string $content)
+    {
+    }
 
     public static function getSchema(): array
     {
         return [
-            TextInput::make('title')->required(),
+            TextInput::make('title')
+                ->required(),
+
             RichEditor::make('content')->toolbarButtons([
                 'attachFiles',
                 'blockquote',
