@@ -11,7 +11,7 @@ class PageBuilder extends Builder
     {
         parent::setUp();
 
-        if (!$this->getBlocks()) {
+        if (! $this->getBlocks()) {
             $blocks = collect(Chord::getBlockTypes())->map(function ($type) {
                 return $type::getBuilderBlock();
             })->toArray();

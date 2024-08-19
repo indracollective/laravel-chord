@@ -22,19 +22,20 @@ class PageResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-//    public static function settingsFormTab(Form $form): Tabs\Tab
-//    {
-//        return Tabs\Tab::make('Settings')->schema([
-//            Fieldset::make('Seo')->schema([
-//                TextInput::make('meta_title'),
-//                TextInput::make('meta_description'),
-//            ]),
-//        ]);
-//    }
+    //    public static function settingsFormTab(Form $form): Tabs\Tab
+    //    {
+    //        return Tabs\Tab::make('Settings')->schema([
+    //            Fieldset::make('Seo')->schema([
+    //                TextInput::make('meta_title'),
+    //                TextInput::make('meta_description'),
+    //            ]),
+    //        ]);
+    //    }
 
-    public static function settingsFormFields(Page|null $record = null): array
+    public static function settingsFormFields(?Page $record = null): array
     {
         $pageTypes = Chord::getPageTypeOptionsForSelect();
+
         return [
             Grid::make(['default' => 1, 'sm' => 2])
                 ->schema([
@@ -52,7 +53,7 @@ class PageResource extends Resource
                         ->generateSlug(),
                     TextInput::make('slug')
                         ->required(),
-                ])
+                ]),
         ];
     }
 
@@ -63,8 +64,8 @@ class PageResource extends Resource
                 Section::make('main')
                     ->schema($form->getRecord()->typeObject()->schema()),
                 Section::make('preview')
-                    ->schema([])
-            ])
+                    ->schema([]),
+            ]),
         ];
     }
 
@@ -77,9 +78,10 @@ class PageResource extends Resource
         if ($record) {
             $record->configureForm($form);
         }
+
         //dd($record);
-//        Fieldset::make('blocks-section')
-//            ->schema([PageBuilder::make('blocks')]),
+        //        Fieldset::make('blocks-section')
+        //            ->schema([PageBuilder::make('blocks')]),
         //dump($form->getFlatComponentsByKey());
         return $form;
     }
@@ -101,7 +103,7 @@ class PageResource extends Resource
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('visual')
                     ->label('Visual edit')
-                    ->url(fn(Page $record): string => route('filament.admin.resources.pages.visual', $record)),
+                    ->url(fn (Page $record): string => route('filament.admin.resources.pages.visual', $record)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -56,19 +56,16 @@ class Page extends Model implements Sortable
         });
     }
 
-    public function typeObject(): PageType | null
+    public function typeObject(): ?PageType
     {
-        if (!$class = Chord::getPageTypeClass($this->page_type)) {
+        if (! $class = Chord::getPageTypeClass($this->page_type)) {
             throw new \Exception("Page Type Class for key '{$this->page_type}' does not exist");
         }
 
         return $class::from($this->type_data ?? []);
     }
 
-    public function configureForm(Form $form): void
-    {
-
-    }
+    public function configureForm(Form $form): void {}
 
     public function getLinkAttribute(): string
     {

@@ -2,9 +2,7 @@
 
 namespace Livesource\Chord\Filament\Actions;
 
-use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
-use Filament\Forms\Form;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use LiveSource\Chord\Models\Page;
 
@@ -20,4 +18,3 @@ class CreatePageAction extends CreateAction
             });
     }
 }
-

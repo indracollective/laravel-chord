@@ -8,6 +8,5 @@ class Redirect extends PageType
 {
     public function __construct(
         public LinkData $link
-    ) {
-    }
+    ) {}
 }

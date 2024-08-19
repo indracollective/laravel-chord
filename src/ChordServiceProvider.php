@@ -75,7 +75,6 @@ class ChordServiceProvider extends PackageServiceProvider
             \Livesource\Chord\PageTypes\Redirect::class,
         ]);
 
-
         ChordFacade::registerBlockTypes([
             RichContent::class,
             CallToAction::class,
@@ -92,7 +91,7 @@ class ChordServiceProvider extends PackageServiceProvider
             $this->getAssetPackageName()
         );
 
-        TextInput::macro('generateSlug',function () {
+        TextInput::macro('generateSlug', function () {
             $this->live(onBlur: true)
                 ->afterStateUpdated(function (string $operation, $state, Set $set) {
                     if ($operation !== 'create') {
@@ -103,8 +102,6 @@ class ChordServiceProvider extends PackageServiceProvider
 
             return $this;
         });
-
-
 
         // Icon Registration
         FilamentIcon::register($this->getIcons());
