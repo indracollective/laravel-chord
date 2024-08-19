@@ -1,6 +1,6 @@
 <?php
 
-namespace Livesource\Chord\Pages;
+namespace Livesource\Chord\PageTypes;
 
 use Spatie\LaravelData\Data;
 

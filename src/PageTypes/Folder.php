@@ -1,6 +1,6 @@
 <?php
 
-namespace Livesource\Chord\Pages;
+namespace Livesource\Chord\PageTypes;
 
 class Folder extends PageType
 {

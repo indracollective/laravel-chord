@@ -2,6 +2,8 @@
 
 namespace LiveSource\Chord;
 
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Set;
 use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Css;
@@ -13,8 +15,7 @@ use LiveSource\Chord\Blocks\CallToAction;
 use LiveSource\Chord\Blocks\RichContent;
 use LiveSource\Chord\Commands\ChordCommand;
 use LiveSource\Chord\Facades\Chord as ChordFacade;
-use Livesource\Chord\Pages\Folder;
-use Livesource\Chord\Pages\Redirect;
+use Livesource\Chord\PageTypes\ContentPage;
 use LiveSource\Chord\Testing\TestsChord;
 use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -69,9 +70,11 @@ class ChordServiceProvider extends PackageServiceProvider
     public function packageBooted(): void
     {
         ChordFacade::registerPageTypes([
-            Folder::class,
-            Redirect::class,
+            ContentPage::class,
+            \Livesource\Chord\PageTypes\Folder::class,
+            \Livesource\Chord\PageTypes\Redirect::class,
         ]);
+
 
         ChordFacade::registerBlockTypes([
             RichContent::class,
@@ -88,6 +91,20 @@ class ChordServiceProvider extends PackageServiceProvider
             $this->getScriptData(),
             $this->getAssetPackageName()
         );
+
+        TextInput::macro('generateSlug',function () {
+            $this->live(onBlur: true)
+                ->afterStateUpdated(function (string $operation, $state, Set $set) {
+                    if ($operation !== 'create') {
+                        return;
+                    }
+                    $set('slug', str($state)->slug());
+                });
+
+            return $this;
+        });
+
+
 
         // Icon Registration
         FilamentIcon::register($this->getIcons());

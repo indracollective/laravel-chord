@@ -3,7 +3,10 @@
 namespace LiveSource\Chord\Filament\Resources\PageResource\Pages;
 
 use Filament\Actions;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
 use Filament\Resources\Pages\ListRecords;
+use Livesource\Chord\Filament\Actions\CreatePageAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use LiveSource\Chord\Models\Page;
 
@@ -18,7 +21,7 @@ class ListPages extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreatePageAction::make(),
         ];
     }
 

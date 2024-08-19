@@ -41,12 +41,12 @@ class Chord
         return $this->blockTypes;
     }
 
-    public function getBlockClass(string $key): ?string
+    public function getBlockTypeClass(string $key): ?string
     {
         return Arr::get($this->blockTypes, $key);
     }
 
-    public function getPageClass(string $key): ?string
+    public function getPageTypeClass(string $key): ?string
     {
         return Arr::get($this->pageTypes, $key);
     }
