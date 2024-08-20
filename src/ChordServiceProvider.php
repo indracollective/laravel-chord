@@ -4,7 +4,6 @@ namespace LiveSource\Chord;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Set;
-use Filament\Support\Assets\AlpineComponent;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
@@ -15,7 +14,9 @@ use LiveSource\Chord\Blocks\CallToAction;
 use LiveSource\Chord\Blocks\RichContent;
 use LiveSource\Chord\Commands\ChordCommand;
 use LiveSource\Chord\Facades\Chord as ChordFacade;
-use Livesource\Chord\PageTypes\ContentPage;
+use LiveSource\Chord\PageTypes\ContentPage;
+use LiveSource\Chord\PageTypes\Folder;
+use LiveSource\Chord\PageTypes\Redirect;
 use LiveSource\Chord\Testing\TestsChord;
 use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -71,8 +72,8 @@ class ChordServiceProvider extends PackageServiceProvider
     {
         ChordFacade::registerPageTypes([
             ContentPage::class,
-            \Livesource\Chord\PageTypes\Folder::class,
-            \Livesource\Chord\PageTypes\Redirect::class,
+            Folder::class,
+            Redirect::class,
         ]);
 
         ChordFacade::registerBlockTypes([

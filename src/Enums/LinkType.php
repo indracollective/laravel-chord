@@ -1,6 +1,6 @@
 <?php
 
-namespace Livesource\Chord\Enums;
+namespace LiveSource\Chord\Enums;
 
 use Filament\Support\Contracts\HasLabel;
 

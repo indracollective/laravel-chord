@@ -1,7 +1,29 @@
 @import '../../vendor/filament/filament/resources/css/theme.css';
 
-body.chord {
-    .fi-sidebar-nav {
-        display: none;
+.chord-edit-page {
+    section {
+        position: absolute;
+        top: 60px;
+        width: 100%;
+        bottom: -11px;
+        padding-bottom: 0;
+
+        > div {
+            height: 100%;
+
+            > div {
+                height: 100%;
+            }
+        }
     }
+
+    /*.fi-fo-builder-item {*/
+    /*    background: transparent;*/
+    /*    box-shadow: none;*/
+
+    /*    .fi-fo-builder-item-header,*/
+    /*    .fi-fo-builder-item-content {*/
+    /*        padding: 0;*/
+    /*    }*/
+    /*}*/
 }

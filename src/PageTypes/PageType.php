@@ -1,11 +1,13 @@
 <?php
 
-namespace Livesource\Chord\PageTypes;
+namespace LiveSource\Chord\PageTypes;
 
 use Spatie\LaravelData\Data;
 
 abstract class PageType extends Data
 {
+    public bool $hasContentTab = true;
+
     public static function getLabel(): string
     {
         return str((new \ReflectionClass(static::class))->getShortName())->headline()->toString();
@@ -16,7 +18,7 @@ abstract class PageType extends Data
         return str((new \ReflectionClass(static::class))->getShortName())->toString();
     }
 
-    public function getSchema(): array
+    public function getFormSchema(): array
     {
         return [];
     }

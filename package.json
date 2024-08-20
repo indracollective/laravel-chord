@@ -2,13 +2,12 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev:site": "npx tailwindcss -i resources/css/site.css -o resources/dist/site.css --postcss --watch",
         "dev:styles": "npx tailwindcss -i resources/css/index.css -o resources/dist/chord.css --postcss --watch",
         "dev:scripts": "node bin/build.js --dev",
         "build:styles": "npx tailwindcss -i resources/css/index.css -o resources/dist/chord.css --postcss --minify && npm run purge",
         "build:scripts": "node bin/build.js",
         "purge": "filament-purge -i resources/dist/chord.css -o resources/dist/chord.css -v 3.x",
-        "dev": "npm-run-all --parallel dev:*",
+        "dev": "npm-run-all dev:*",
         "build": "npm-run-all build:*"
     },
     "devDependencies": {
@@ -16,6 +15,7 @@
         "@tailwindcss/forms": "^0.5.4",
         "@tailwindcss/typography": "^0.5.9",
         "autoprefixer": "^10.4.14",
+        "chokidar-cli": "^3.0.0",
         "esbuild": "^0.19.2",
         "npm-run-all": "^4.1.5",
         "postcss": "^8.4.26",

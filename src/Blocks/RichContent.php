@@ -2,19 +2,16 @@
 
 namespace LiveSource\Chord\Blocks;
 
-use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 
-class RichContent extends Block
+class RichContent extends BlockType
 {
     protected static string $component = 'chord::blocks.rich-content';
 
-    public function __construct(public string $title, public string $content)
-    {
-    }
+    public function __construct(public string $title, public string $content) {}
 
-    public static function getSchema(): array
+    public static function getFormSchema(): array
     {
         return [
             TextInput::make('title')
@@ -37,15 +34,6 @@ class RichContent extends Block
                 'underline',
                 'undo',
             ]),
-            Builder::class::make('blocks')
-                ->blocks([
-                    Builder\Block::make('heading')
-                        ->schema([
-                            TextInput::make('content')
-                                ->label('Heading')
-                                ->required(),
-                        ]),
-                ]),
         ];
     }
 }

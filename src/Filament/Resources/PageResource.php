@@ -4,9 +4,7 @@ namespace LiveSource\Chord\Filament\Resources;
 
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Split;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -22,19 +20,20 @@ class PageResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-//    public static function settingsFormTab(Form $form): Tabs\Tab
-//    {
-//        return Tabs\Tab::make('Settings')->schema([
-//            Fieldset::make('Seo')->schema([
-//                TextInput::make('meta_title'),
-//                TextInput::make('meta_description'),
-//            ]),
-//        ]);
-//    }
+    //    public static function settingsFormTab(Form $form): Tabs\Tab
+    //    {
+    //        return Tabs\Tab::make('Settings')->schema([
+    //            Fieldset::make('Seo')->schema([
+    //                TextInput::make('meta_title'),
+    //                TextInput::make('meta_description'),
+    //            ]),
+    //        ]);
+    //    }
 
-    public static function settingsFormFields(Page|null $record = null): array
+    public static function settingsFormFields(/*?Page $record = null*/): array
     {
         $pageTypes = Chord::getPageTypeOptionsForSelect();
+
         return [
             Grid::make(['default' => 1, 'sm' => 2])
                 ->schema([
@@ -52,21 +51,13 @@ class PageResource extends Resource
                         ->generateSlug(),
                     TextInput::make('slug')
                         ->required(),
-                ])
+                ]),
         ];
     }
 
     public static function formFields(Form $form): array
     {
-        return [
-
-                Grid::make(['default' => 1])
-                    ->schema($form->getRecord()->typeObject()->getSchema())
-                    ->hiddenLabel(true)
-                    ->grow()
-                    ->columnSpanFull(),
-            
-        ];
+        return $form->getRecord()->getData()->getFormSchema();
     }
 
     public static function form(Form $form): Form
@@ -75,12 +66,11 @@ class PageResource extends Resource
 
         $record = $form->getRecord();
 
-        if ($record) {
-            $record->configureForm($form);
-        }
+        $record?->configureForm($form);
+
         //dd($record);
-//        Fieldset::make('blocks-section')
-//            ->schema([PageBuilder::make('blocks')]),
+        //        Fieldset::make('blocks-section')
+        //            ->schema([PageBuilder::make('blocks')]),
         //dump($form->getFlatComponentsByKey());
         return $form;
     }
@@ -100,7 +90,7 @@ class PageResource extends Resource
 
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

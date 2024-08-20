@@ -1,9 +1,9 @@
 <?php
 
-namespace Livesource\Chord\Data;
+namespace LiveSource\Chord\Data;
 
 use Filament\Forms\Components\Select;
-use Livesource\Chord\Enums\LinkType;
+use LiveSource\Chord\Enums\LinkType;
 use Spatie\LaravelData\Data;
 
 class LinkData extends Data

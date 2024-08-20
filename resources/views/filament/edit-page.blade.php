@@ -9,7 +9,7 @@
          @mousemove.window="if (resizing) { leftWidth = `${($event.clientX / $el.clientWidth) * 100}%` }"
          @mouseup.window="resizing = false"
          class="flex w-full h-full">
-        <div :style="'width: ' + leftWidth">
+        <div :style="'width: ' + leftWidth" class="border-r border-gray-200 pr-4">
             @capture($form)
             <x-filament-panels::form
                 id="form"
@@ -55,15 +55,16 @@
 
             <x-filament-panels::page.unsaved-data-changes-alert />
         </div>
-        <div class="flex">
+        <div class="flex flex-grow">
             <!-- Resizer -->
             <div
                 @mousedown="resizing = true"
-                class="bg-gray-500 cursor-col-resize w-1"
-                style="min-width: 5px; border: 1px solid red"
-            ></div>
-            <div class="flex-1">
-            PREVIEW
+                class="cursor-col-resize w-6 flex items-center justify-center"
+            >
+                <div class="w-1.5 border-x border-black h-8"></div>
+            </div>
+            <div class="w-full bg-white flex-grow">
+                <iframe src="{{ $record->link }}" class="w-full h-full"></iframe>
             </div>
         </div>
     </div>

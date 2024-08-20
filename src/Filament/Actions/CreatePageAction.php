@@ -1,6 +1,6 @@
 <?php
 
-namespace Livesource\Chord\Filament\Actions;
+namespace LiveSource\Chord\Filament\Actions;
 
 use Filament\Actions\CreateAction;
 use LiveSource\Chord\Filament\Resources\PageResource;

@@ -2,30 +2,32 @@
 
 namespace LiveSource\Chord\Models;
 
+use Exception;
 use Filament\Forms\Form;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Collection;
-use LiveSource\Chord\Chord;
 use LiveSource\Chord\Facades\Chord as ChordFacade;
-use Livesource\Chord\PageTypes\PageType;
+use LiveSource\Chord\PageTypes\PageType;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
 
 class Page extends Model implements Sortable
 {
-    use HasFactory;
     use SortableTrait;
 
     protected $fillable = [
         'title',
         'slug',
-        'data',
+        'page_data',
         'parent_id',
         'order_column',
-        'type'
+        'type',
+    ];
+
+    protected $casts = [
+        'page_data' => 'array',
     ];
 
     public function parent(): BelongsTo
@@ -33,52 +35,28 @@ class Page extends Model implements Sortable
         return $this->belongsTo(Page::class, 'parent_id');
     }
 
-    protected $casts = [
-        'data' => 'array',
-    ];
+    /**
+     * @throws Exception
+     */
+    public function getData(): PageType
+    {
+        // todo - this should be cached
+        $type = $this->getRawOriginal('type');
+        if (! $class = ChordFacade::getPageTypeClass($type)) {
+            throw new Exception("Page Type Class for key '$type' does not exist. Registered types are " . implode(', ', array_keys(ChordFacade::getPageTypes())));
+        }
+
+        return $class::from($this->getRawOriginal('page_data') ?? []);
+    }
 
     public function children(): HasMany
     {
         return $this->hasMany(static::class, 'parent_id');
     }
 
-    public function buildSortQuery()
+    public function buildSortQuery(): Builder
     {
         return static::query()->where('parent_id', $this->parent_id);
-    }
-
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public function blockData(): Collection
-    {
-        return collect($this->blocks ?? [])->map(function ($block) {
-            if (! $class = Chord::getBlockTypeClass($block['type'])) {
-                throw new \Exception("Block Class for key '{$block['type']}' does not exist");
-            }
-
-            return $class::from($block['data']);
-        });
-    }
-
-    public function typeObject(): ?PageType
-    {
-        if (! $class = Chord::getPageTypeClass($this->page_type)) {
-            throw new \Exception("Page Type Class for key '{$this->page_type}' does not exist");
-=======
-=======
->>>>>>> Stashed changes
-    public function typeObject(): PageType | null
-    {
-        // todo - this should be cached
-        if (!$class = ChordFacade::getPageTypeClass($this->type)) {
-            throw new \Exception("Page Type Class for key '{$this->type}' does not exist. Registered types are " . implode(', ', array_keys(ChordFacade::getPageTypes())));
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-        }
-
-        return $class::from($this->data ?? []);
     }
 
     public function configureForm(Form $form): void {}

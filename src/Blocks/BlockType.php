@@ -5,7 +5,7 @@ namespace LiveSource\Chord\Blocks;
 use Filament\Forms\Components\Builder\Block as BuilderBlock;
 use Spatie\LaravelData\Data;
 
-abstract class Block extends Data
+abstract class BlockType extends Data
 {
     protected static string $component = '';
 
@@ -19,7 +19,7 @@ abstract class Block extends Data
         return str((new \ReflectionClass(static::class))->getShortName())->toString();
     }
 
-    public static function getSchema(): array
+    public static function getFormSchema(): array
     {
         return [];
     }
@@ -28,7 +28,7 @@ abstract class Block extends Data
     {
         return BuilderBlock::make(static::class)
             ->label(static::getLabel())
-            ->schema(static::getSchema());
+            ->schema(static::getFormSchema());
     }
 
     public function getComponent(): string

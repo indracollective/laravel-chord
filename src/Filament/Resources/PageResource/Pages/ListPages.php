@@ -3,7 +3,7 @@
 namespace LiveSource\Chord\Filament\Resources\PageResource\Pages;
 
 use Filament\Resources\Pages\ListRecords;
-use Livesource\Chord\Filament\Actions\CreatePageAction;
+use LiveSource\Chord\Filament\Actions\CreatePageAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use LiveSource\Chord\Models\Page;
 

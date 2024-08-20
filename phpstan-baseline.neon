@@ -1,3 +1,0 @@
-parameters:
-    autoload_files:
-        - %rootDir%/../../../../vendor/autoload.php
