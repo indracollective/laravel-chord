@@ -1,0 +1,13 @@
+# Chord\Models\Page
+    - id
+    - title
+    - slug
+    - meta_description
+    - meta_title
+    - type
+    - content_data
+    - meta_data
+    - parent_id
+    - order_column
+
+# Chord\Models\ContentPage extends Page

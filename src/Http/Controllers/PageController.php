@@ -4,13 +4,13 @@ namespace LiveSource\Chord\Http\Controllers;
 
 //use App\Http\Controllers\Controller;
 use Illuminate\Routing\Controller;
-use LiveSource\Chord\Models\Page;
+use LiveSource\Chord\Models\ChordPage;
 
 class PageController extends Controller
 {
     public function __invoke(string $url = '/')
     {
-        $page = Page::firstWhere('slug', $url);
+        $page = ChordPage::firstWhere('slug', $url);
         if (! $page) {
             abort(404);
         }

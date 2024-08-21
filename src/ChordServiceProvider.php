@@ -14,9 +14,7 @@ use LiveSource\Chord\Blocks\CallToAction;
 use LiveSource\Chord\Blocks\RichContent;
 use LiveSource\Chord\Commands\ChordCommand;
 use LiveSource\Chord\Facades\Chord as ChordFacade;
-use LiveSource\Chord\PageTypes\ContentPage;
-use LiveSource\Chord\PageTypes\Folder;
-use LiveSource\Chord\PageTypes\Redirect;
+use LiveSource\Chord\Models\ContentPage;
 use LiveSource\Chord\Testing\TestsChord;
 use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -72,8 +70,8 @@ class ChordServiceProvider extends PackageServiceProvider
     {
         ChordFacade::registerPageTypes([
             ContentPage::class,
-            Folder::class,
-            Redirect::class,
+            //            Folder::class,
+            //            Redirect::class,
         ]);
 
         ChordFacade::registerBlockTypes([

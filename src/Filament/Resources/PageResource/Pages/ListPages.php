@@ -12,7 +12,7 @@ use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Filament\Actions\CreatePageAction;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
-use LiveSource\Chord\Models\Page;
+use LiveSource\Chord\Models\ChordPage;
 
 class ListPages extends ListRecords
 {
@@ -20,12 +20,12 @@ class ListPages extends ListRecords
 
     protected ?string $maxContentWidth = 'full';
 
-    public ?Page $parentPage = null;
+    public ?ChordPage $parentPage = null;
 
     public function mount(): void
     {
         if (request()->parent) {
-            $this->parentPage = Page::findOrFail(request()->parent);
+            $this->parentPage = ChordPage::findOrFail(request()->parent);
             $this->heading = $this->parentPage->title;
         }
 
@@ -76,7 +76,7 @@ class ListPages extends ListRecords
             ))
             // allow the PageType to update the url of the table row link
             ->recordUrl(function (Model $record, Table $table): ?string {
-                if ($url = $record->getData()->getTableRecordURL()) {
+                if ($url = $record->getTableRecordURL($table)) {
                     return $url;
                 }
 
@@ -126,7 +126,7 @@ class ListPages extends ListRecords
 
     public function reorderTable(array $order): void
     {
-        Page::setNewOrder($order);
+        ChordPage::setNewOrder($order);
     }
 
     protected function configureEditAction(EditAction $action): void

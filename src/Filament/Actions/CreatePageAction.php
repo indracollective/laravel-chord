@@ -3,7 +3,7 @@
 namespace LiveSource\Chord\Filament\Actions;
 
 use Filament\Actions\CreateAction;
-use LiveSource\Chord\Models\Page;
+use LiveSource\Chord\Models\ChordPage;
 use LiveSource\Chord\PageTypes\PageType;
 
 class CreatePageAction extends CreateAction
@@ -21,8 +21,8 @@ class CreatePageAction extends CreateAction
             ->size('xl')
             ->modalWidth('md')
             ->form(PageType::getSettingsFormSchema())
-            ->successRedirectUrl(function (Page $record, array $arguments): ?string {
-                return $record->getData()->afterCreateRedirectURL();
+            ->successRedirectUrl(function (ChordPage $record, array $arguments): ?string {
+                return $record->afterCreateRedirectURL();
             });
     }
 }

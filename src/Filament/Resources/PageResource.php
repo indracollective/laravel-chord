@@ -7,11 +7,13 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
-use LiveSource\Chord\Models\Page;
+use LiveSource\Chord\Filament\Actions\EditPageTableAction;
+use LiveSource\Chord\Filament\Actions\ViewChildPagesTableAction;
+use LiveSource\Chord\Models\ChordPage;
 
 class PageResource extends Resource
 {
-    protected static ?string $model = Page::class;
+    protected static ?string $model = ChordPage::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -22,9 +24,7 @@ class PageResource extends Resource
 
     public static function form(Form $form): Form
     {
-        $record = $form->getRecord();
-
-        return $form->schema($record->getData()->getContentFormSchema() ?? []);
+        return $form->getRecord()->contentForm($form);
     }
 
     public static function table(Table $table): Table
@@ -39,17 +39,11 @@ class PageResource extends Resource
                 Tables\Columns\TextColumn::make('type'),
                 Tables\Columns\TextColumn::make('parent_id'),
                 Tables\Columns\TextColumn::make('order_column'),
-
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->label('')
-                    ->hidden(fn (Page $record) => ! $record->getData()->hasContentFormSchema()),
+                EditPageTableAction::make('edit'),
                 EditPageSettingsTableAction::make('settings'),
-                Tables\Actions\Action::make('Children')
-                    ->url(fn (Page $record) => PageResource::getUrl('children', ['parent' => $record->id]))
-                    ->icon('heroicon-o-chevron-right')
-                    ->label(''),
+                ViewChildPagesTableAction::make('children'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

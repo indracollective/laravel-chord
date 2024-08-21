@@ -9,12 +9,12 @@ use Filament\Forms\Components\TextInput;
 use Illuminate\Validation\Rules\Unique;
 use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Filament\Resources\PageResource;
-use LiveSource\Chord\Models\Page;
+use LiveSource\Chord\Models\ChordPage;
 use Spatie\LaravelData\Data;
 
 abstract class PageType extends Data
 {
-    protected ?Page $record;
+    protected ?ChordPage $record;
 
     public bool $hasContentTab = true;
 
@@ -28,7 +28,7 @@ abstract class PageType extends Data
         return str((new \ReflectionClass(static::class))->getShortName())->toString();
     }
 
-    public static function getSettingsFormSchema(?Page $record = null): array
+    public static function getSettingsFormSchema(?ChordPage $record = null): array
     {
         $pageTypes = Chord::getPageTypeOptionsForSelect();
 
@@ -72,14 +72,14 @@ abstract class PageType extends Data
         return PageResource::getUrl('edit', ['record' => $this->getRecord()]);
     }
 
-    public function record(Page $record): static
+    public function record(ChordPage $record): static
     {
         $this->record = $record;
 
         return $this;
     }
 
-    public function getRecord(): ?Page
+    public function getRecord(): ?ChordPage
     {
         return $this->record;
     }

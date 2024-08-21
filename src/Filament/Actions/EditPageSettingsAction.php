@@ -4,7 +4,7 @@ namespace LiveSource\Chord\Filament\Actions;
 
 use Filament\Actions\EditAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
-use LiveSource\Chord\Models\Page;
+use LiveSource\Chord\Models\ChordPage;
 
 class EditPageSettingsAction extends EditAction
 {
@@ -13,7 +13,7 @@ class EditPageSettingsAction extends EditAction
         parent::setUp();
 
         $this->form(PageResource::settingsFormFields())
-            ->successRedirectUrl(function (Page $record, array $arguments): string {
+            ->successRedirectUrl(function (ChordPage $record, array $arguments): string {
                 return PageResource::getUrl('edit', ['record' => $record]);
             });
     }
