@@ -9,7 +9,7 @@ class EditPageSettingsTableAction extends EditAction
 {
     public static function getDefaultName(): ?string
     {
-        return 'settings';
+        return '';
     }
 
     protected function setUp(): void

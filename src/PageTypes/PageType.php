@@ -6,6 +6,7 @@ use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Illuminate\Validation\Rules\Unique;
 use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use LiveSource\Chord\Models\Page;
@@ -36,7 +37,8 @@ abstract class PageType extends Data
                 ->schema([
                     Select::make('type')
                         ->options($pageTypes)
-                        ->default(array_key_first($pageTypes))
+                        ->default(array_key_first($pageTypes) ?? null)
+                        ->selectablePlaceholder(false)
                         ->required(),
                     // todo make this only show folder options
                     SelectTree::make('parent_id')
@@ -47,7 +49,10 @@ abstract class PageType extends Data
                         ->required()
                         ->generateSlug(),
                     TextInput::make('slug')
-                        ->required(),
+                        ->required()
+                        ->unique(modifyRuleUsing: function (Unique $rule, $get) {
+                            return $rule->where('parent_id', $get('parent_id'))->ignore($get('id'));
+                        }),
                 ]),
         ];
     }

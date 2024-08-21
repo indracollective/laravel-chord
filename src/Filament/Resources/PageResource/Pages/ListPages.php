@@ -8,6 +8,7 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Filament\Actions\CreatePageAction;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
@@ -19,13 +20,13 @@ class ListPages extends ListRecords
 
     protected ?string $maxContentWidth = 'full';
 
-    public ?Page $parent = null;
+    public ?Page $parentPage = null;
 
     public function mount(): void
     {
         if (request()->parent) {
-            $this->parent = request()->parent;
-            $this->heading = $this->parent->title;
+            $this->parentPage = Page::findOrFail(request()->parent);
+            $this->heading = $this->parentPage->title;
         }
 
         parent::mount();
@@ -33,24 +34,45 @@ class ListPages extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        $parent = $this->parent;
+        $parent = $this->parentPage;
+        $pageTypes = Chord::getPageTypeOptionsForSelect();
 
         return [
             CreatePageAction::make()->fillForm(fn (): array => [
-                'parent_id' => $this->parent?->id,
+                'type' => array_key_first($pageTypes),
+                'parent_id' => $this->parentPage?->id,
             ]),
         ];
+    }
+
+    public function getBreadcrumbs(): array
+    {
+        $resource = static::getResource();
+        $resourceURL = $resource::getUrl();
+
+        $breadcrumbs = [
+            $resourceURL => $resource::getBreadcrumb(),
+            //...(filled($breadcrumb = $this->getBreadcrumb()) ? [$breadcrumb] : []),
+        ];
+
+        if ($this->parentPage) {
+            $breadcrumbs["$resourceURL/{$this->parentPage->id}"] = $this->parentPage->title;
+        }
+
+        $breadcrumbs[] = 'List';
+
+        return $breadcrumbs;
     }
 
     public function table(Table $table): Table
     {
         $table = static::getResource()::table($table);
-        $parent = $this->parent;
+        $parent = $this->parentPage;
 
         $table
             // filter pages by parent if parent is set
             ->modifyQueryUsing(fn (Builder $query): Builder => (
-                $parent ? $query->where('parent_id', $parent->id) : $query
+                $parent ? $query->where('parent_id', $parent->id) : $query->where('parent_id', null)
             ))
             // allow the PageType to update the url of the table row link
             ->recordUrl(function (Model $record, Table $table): ?string {

@@ -6,7 +6,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
 use LiveSource\Chord\Models\Page;
 
@@ -25,7 +24,7 @@ class PageResource extends Resource
     {
         $record = $form->getRecord();
 
-        return $form->schema($record->getData()->getContentFormSchema());
+        return $form->schema($record->getData()->getContentFormSchema() ?? []);
     }
 
     public static function table(Table $table): Table
@@ -46,7 +45,7 @@ class PageResource extends Resource
                 Tables\Actions\EditAction::make()
                     ->label('')
                     ->hidden(fn (Page $record) => ! $record->getData()->hasContentFormSchema()),
-                EditPageSettingsTableAction::make(),
+                EditPageSettingsTableAction::make('settings'),
                 Tables\Actions\Action::make('Children')
                     ->url(fn (Page $record) => PageResource::getUrl('children', ['parent' => $record->id]))
                     ->icon('heroicon-o-chevron-right')
@@ -56,14 +55,7 @@ class PageResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ])
-            ->modifyQueryUsing(function (EloquentBuilder $query): EloquentBuilder {
-                if (request()->has('parent')) {
-                    return $query->where('parent_id', request()->get('parent'));
-                }
-
-                return $query->where('parent_id', null);
-            });
+            ]);
     }
 
     public static function getRelations(): array

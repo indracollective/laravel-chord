@@ -19,6 +19,7 @@ class CreatePageAction extends CreateAction
             ->icon('heroicon-s-plus-circle')
             ->iconButton()
             ->size('xl')
+            ->modalWidth('md')
             ->form(PageType::getSettingsFormSchema())
             ->successRedirectUrl(function (Page $record, array $arguments): ?string {
                 return $record->getData()->afterCreateRedirectURL();
