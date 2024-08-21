@@ -6,14 +6,31 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
-        Schema::create('chord_table', function (Blueprint $table) {
+        Schema::create('pages', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->string('slug');
+            $table->string('meta_description')->nullable();
+            $table->string('meta_title')->nullable();
 
-            // add fields
+            $table->string('type')->nullable();
+            $table->jsonb('page_data')->nullable();
+
+            // $table->string('layout')->default('default')->index();
+
+            $table->foreignId('parent_id')->nullable()->constrained('pages')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->integer('order_column')->default(0);
+            $table->unique(['slug', 'parent_id']);
+
 
             $table->timestamps();
         });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('pages');
     }
 };

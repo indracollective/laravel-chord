@@ -29,7 +29,7 @@ class ContentPage extends PageType
         });
     }
 
-    public function getFormSchema(): array
+    public function getContentFormSchema(): array
     {
         return [
             Tabs::make('Main')

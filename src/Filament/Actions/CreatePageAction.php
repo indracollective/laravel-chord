@@ -3,8 +3,8 @@
 namespace LiveSource\Chord\Filament\Actions;
 
 use Filament\Actions\CreateAction;
-use LiveSource\Chord\Filament\Resources\PageResource;
 use LiveSource\Chord\Models\Page;
+use LiveSource\Chord\PageTypes\PageType;
 
 class CreatePageAction extends CreateAction
 {
@@ -12,9 +12,14 @@ class CreatePageAction extends CreateAction
     {
         parent::setUp();
 
-        $this->form(PageResource::settingsFormFields())
-            ->successRedirectUrl(function (Page $record, array $arguments): string {
-                return PageResource::getUrl('edit', ['record' => $record]);
+        $this
+            ->label('')
+            ->icon('heroicon-s-plus-circle')
+            ->iconButton()
+            ->size('xl')
+            ->form(PageType::getSettingsFormSchema())
+            ->successRedirectUrl(function (Page $record, array $arguments): ?string {
+                return $record->getData()->afterCreateRedirectURL();
             });
     }
 }

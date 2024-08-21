@@ -41,12 +41,11 @@ class Page extends Model implements Sortable
     public function getData(): PageType
     {
         // todo - this should be cached
-        $type = $this->getRawOriginal('type');
-        if (! $class = ChordFacade::getPageTypeClass($type)) {
-            throw new Exception("Page Type Class for key '$type' does not exist. Registered types are " . implode(', ', array_keys(ChordFacade::getPageTypes())));
+        if (! $class = ChordFacade::getPageTypeClass($this->type)) {
+            throw new Exception("Page Type Class for key '$this->type' does not exist. Registered types are " . implode(', ', array_keys(ChordFacade::getPageTypes())));
         }
 
-        return $class::from($this->getRawOriginal('page_data') ?? []);
+        return $class::from($this->getRawOriginal('page_data') ?? [])->record($this);
     }
 
     public function children(): HasMany
