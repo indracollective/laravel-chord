@@ -8,6 +8,8 @@ use LiveSource\Chord\PageTypes\PageType;
 
 class CreatePageAction extends CreateAction
 {
+    public string | int | null $parent_id = null;
+
     protected function setUp(): void
     {
         parent::setUp();

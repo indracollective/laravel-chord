@@ -19,12 +19,12 @@ class ListPages extends ListRecords
 
     protected ?string $maxContentWidth = 'full';
 
-    protected ?Page $parent;
+    public ?Page $parent = null;
 
     public function mount(): void
     {
         if (request()->parent) {
-            $this->parent = Page::find(request()->parent);
+            $this->parent = request()->parent;
             $this->heading = $this->parent->title;
         }
 
@@ -33,28 +33,32 @@ class ListPages extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        $formData = request()->parent ? ['parent_id' => request()->parent] : [];
+        $parent = $this->parent;
 
         return [
-            CreatePageAction::make()->formData($formData),
+            CreatePageAction::make()->fillForm(fn (): array => [
+                'parent_id' => $this->parent?->id,
+            ]),
         ];
     }
 
     public function table(Table $table): Table
     {
         $table = static::getResource()::table($table);
+        $parent = $this->parent;
 
         $table
-            ->modifyQueryUsing(function (Builder $query): Builder {
-                return request()->parent ? $query->where('parent_id', request()->parent) : $query;
-            })
+            // filter pages by parent if parent is set
+            ->modifyQueryUsing(fn (Builder $query): Builder => (
+                $parent ? $query->where('parent_id', $parent->id) : $query
+            ))
+            // allow the PageType to update the url of the table row link
             ->recordUrl(function (Model $record, Table $table): ?string {
                 if ($url = $record->getData()->getTableRecordURL()) {
                     return $url;
                 }
 
                 // fallback to default (copied from ListRecords)
-
                 foreach (['view', 'edit'] as $action) {
                     $action = $table->getAction($action);
 
