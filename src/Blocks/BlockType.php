@@ -14,7 +14,7 @@ abstract class BlockType extends Data
         return str((new \ReflectionClass(static::class))->getShortName())->headline()->toString();
     }
 
-    public static function getDefaultKey(): string
+    public static function defaultKey(): string
     {
         return str((new \ReflectionClass(static::class))->getShortName())->toString();
     }

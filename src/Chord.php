@@ -14,7 +14,7 @@ class Chord
 
     public function registerPageType(string $class, ?string $key): void
     {
-        $this->pageTypes[$key ?? $class::getDefaultKey()] = $class;
+        $this->pageTypes[$key ?? $class::defaultKey()] = $class;
     }
 
     public function registerPageTypes(array $types): void
@@ -26,7 +26,7 @@ class Chord
 
     public function registerBlockType(string $class, ?string $key): void
     {
-        $this->blockTypes[$key ?? $class::getDefaultKey()] = $class;
+        $this->blockTypes[$key ?? $class::defaultKey()] = $class;
     }
 
     public function registerBlockTypes(array $types): void
@@ -58,6 +58,6 @@ class Chord
 
     public function getPageTypeOptionsForSelect(): array
     {
-        return Arr::mapWithKeys($this->pageTypes, fn ($class, $key) => [$key => $class::getLabel()]);
+        return Arr::mapWithKeys($this->pageTypes, fn ($class, $key) => [$key => $class::label()]);
     }
 }

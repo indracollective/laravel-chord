@@ -4,7 +4,6 @@ namespace LiveSource\Chord\Models;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,6 +22,8 @@ class ChordPage extends Model implements Sortable
 
     protected $table = 'chord_pages';
 
+    protected bool $hasContentForm = true;
+
     protected $fillable = [
         'title',
         'slug',
@@ -38,14 +39,14 @@ class ChordPage extends Model implements Sortable
         'meta' => 'array',
     ];
 
-    public function contentForm(Form $form): Form
+    public function contentForm(Form $form): ?Form
     {
         return $form->schema([
             TextInput::make('title'),
         ]);
     }
 
-    public function getTableRecordURL(Table $table): ?string
+    public function tableRecordURL(): ?string
     {
         return PageResource::getUrl('edit', ['record' => $this->id]);
     }
@@ -62,7 +63,7 @@ class ChordPage extends Model implements Sortable
 
     public function hasContentForm(): bool
     {
-        return true;
+        return $this->hasContentForm;
     }
 
     public function getLinkAttribute(): string
@@ -70,9 +71,14 @@ class ChordPage extends Model implements Sortable
         return $this->slug === '/' ? $this->slug : "/$this->slug";
     }
 
-    public function getChildTypes(): array
+    public static function label(): string
     {
-        return Chord::getPageTypes();
+        return str((new \ReflectionClass(static::class))->getShortName())->headline()->toString();
+    }
+
+    public static function defaultKey(): string
+    {
+        return str((new \ReflectionClass(static::class))->getShortName())->toString();
     }
 
     public function parent(): BelongsTo
@@ -85,18 +91,13 @@ class ChordPage extends Model implements Sortable
         return $this->hasMany(ChordPage::class, 'parent_id');
     }
 
+    public function getChildTypes(): array
+    {
+        return Chord::getPageTypes();
+    }
+
     public function buildSortQuery(): Builder
     {
         return static::query()->where('parent_id', $this->parent_id);
-    }
-
-    public static function getLabel(): string
-    {
-        return str((new \ReflectionClass(static::class))->getShortName())->headline()->toString();
-    }
-
-    public static function getDefaultKey(): string
-    {
-        return str((new \ReflectionClass(static::class))->getShortName())->toString();
     }
 }

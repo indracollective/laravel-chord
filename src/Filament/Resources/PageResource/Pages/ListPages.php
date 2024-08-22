@@ -76,7 +76,7 @@ class ListPages extends ListRecords
             ))
             // allow the PageType to update the url of the table row link
             ->recordUrl(function (Model $record, Table $table): ?string {
-                if ($url = $record->getTableRecordURL($table)) {
+                if ($url = $record->tableRecordURL($table)) {
                     return $url;
                 }
 
