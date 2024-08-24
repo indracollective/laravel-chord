@@ -5,9 +5,9 @@ namespace LiveSource\Chord\Blocks;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 
-class RichContent extends BlockType
+class Hero extends BlockType
 {
-    protected static string $component = 'chord::site.blocks.rich-content';
+    protected static string $component = 'site.blocks.hero';
 
     public function __construct(public string $title, public string $content) {}
 

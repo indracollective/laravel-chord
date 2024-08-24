@@ -11,6 +11,7 @@ use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Filesystem\Filesystem;
 use LiveSource\Chord\Blocks\CallToAction;
+use LiveSource\Chord\Blocks\Hero;
 use LiveSource\Chord\Blocks\RichContent;
 use LiveSource\Chord\Commands\ChordCommand;
 use LiveSource\Chord\Facades\Chord as ChordFacade;
@@ -65,7 +66,12 @@ class ChordServiceProvider extends PackageServiceProvider
         }
     }
 
-    public function packageRegistered(): void {}
+    public function packageRegistered(): void
+    {
+        $this->app->bind(ModifyChord::class, function () {
+            return new ModifyChord;
+        });
+    }
 
     public function packageBooted(): void
     {
@@ -78,6 +84,7 @@ class ChordServiceProvider extends PackageServiceProvider
         ChordFacade::registerBlockTypes([
             RichContent::class,
             CallToAction::class,
+            Hero::class,
         ]);
 
         // Asset Registration

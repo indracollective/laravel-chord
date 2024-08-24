@@ -12,7 +12,7 @@ class EditPageSettingsAction extends EditAction
     {
         parent::setUp();
 
-        $this->form(PageResource::settingsFormFields())
+        $this->form(fn (ChordPage $record) => PageResource::getSettingsFormSchema($this))
             ->successRedirectUrl(function (ChordPage $record, array $arguments): string {
                 return PageResource::getUrl('edit', ['record' => $record]);
             });

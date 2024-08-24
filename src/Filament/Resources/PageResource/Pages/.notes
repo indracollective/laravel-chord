@@ -1,3 +1,7 @@
+# Things to be able to override on a per page type basis
+
+
+
 # Chord\Models\Page
     - id
     - title

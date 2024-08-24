@@ -2,10 +2,17 @@
 
 namespace LiveSource\Chord\Filament\Resources;
 
+use CodeWithDennis\FilamentSelectTree\SelectTree;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Validation\Rules\Unique;
+use LiveSource\Chord\Facades\Chord;
+use LiveSource\Chord\Facades\ModifyChord;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
 use LiveSource\Chord\Filament\Actions\EditPageTableAction;
 use LiveSource\Chord\Filament\Actions\ViewChildPagesTableAction;
@@ -17,14 +24,48 @@ class PageResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function getContentFormFields(Form $form): array
+    public static function getSettingsFormSchema(): array
     {
-        return $form->getRecord()->getData()->getFormSchema();
+        $pageTypes = Chord::getPageTypeOptionsForSelect();
+
+        return [
+            Grid::make(['default' => 1])
+                ->schema([
+                    Select::make('type')
+                        ->options($pageTypes)
+                        ->default(array_key_first($pageTypes) ?? null)
+                        ->selectablePlaceholder(false)
+                        ->required(),
+                    // todo make this only show folder options
+                    SelectTree::make('parent_id')
+                        ->placeholder('Top level')
+                        ->relationship('parent', 'title', 'parent_id')
+                        ->label('Parent'),
+                    TextInput::make('title')
+                        ->required()
+                        ->generateSlug(),
+                    TextInput::make('slug')
+                        ->required()
+                        ->unique(modifyRuleUsing: function (Unique $rule, $get) {
+                            return $rule->where('parent_id', $get('parent_id'))->ignore($get('id'));
+                        }),
+                ]),
+        ];
     }
 
     public static function form(Form $form): Form
     {
-        return $form->getRecord()->contentForm($form);
+        $form->schema([
+            Grid::make(['default' => 1])
+                ->key('main')
+                ->schema([
+                    TextInput::make('title')->required(),
+                ]),
+        ]);
+
+        ModifyChord::apply('contentForm', $form);
+
+        return $form;
     }
 
     public static function table(Table $table): Table
@@ -40,6 +81,7 @@ class PageResource extends Resource
                 Tables\Columns\TextColumn::make('parent_id'),
                 Tables\Columns\TextColumn::make('order_column'),
             ])
+            ->configure()
             ->actions([
                 EditPageTableAction::make('edit'),
                 EditPageSettingsTableAction::make('settings'),

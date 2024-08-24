@@ -14,7 +14,7 @@ abstract class BlockType extends Data
         return str((new \ReflectionClass(static::class))->getShortName())->headline()->toString();
     }
 
-    public static function defaultKey(): string
+    public static function getDefaultKey(): string
     {
         return str((new \ReflectionClass(static::class))->getShortName())->toString();
     }
@@ -26,7 +26,7 @@ abstract class BlockType extends Data
 
     public static function getBuilderBlock(): BuilderBlock
     {
-        return BuilderBlock::make(static::class)
+        return BuilderBlock::make(static::getDefaultKey())
             ->label(static::getLabel())
             ->schema(static::getFormSchema());
     }

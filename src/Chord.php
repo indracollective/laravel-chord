@@ -10,6 +10,16 @@ class Chord
 
     protected array $pageTypes = [];
 
+    protected array $modifyCreatePageActionUsing = [];
+
+    protected array $modifyContentFormUsing = [];
+
+    protected array $modifySettingsTableActionUsing = [];
+
+    protected array $modifySettingsActionUsing = [];
+
+    protected array $modifyChildPagesTableActionUsing = [];
+
     public function __construct() {}
 
     public function registerPageType(string $class, ?string $key): void
@@ -26,7 +36,7 @@ class Chord
 
     public function registerBlockType(string $class, ?string $key): void
     {
-        $this->blockTypes[$key ?? $class::defaultKey()] = $class;
+        $this->blockTypes[$key ?? $class::getDefaultKey()] = $class;
     }
 
     public function registerBlockTypes(array $types): void

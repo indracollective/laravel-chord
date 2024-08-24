@@ -2,14 +2,20 @@
 
 namespace LiveSource\Chord\Models;
 
+use LiveSource\Chord\Filament\Actions\EditPageSettingsAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use Parental\HasParent as HasInheritance;
 
-class Folder extends ChordPage
+class RedirectPage extends ChordPage
 {
     use HasInheritance;
 
     protected bool $hasContentForm = false;
+
+    public function settingsAction(): ?EditPageSettingsAction
+    {
+        return parent::settingsAction();
+    }
 
     public function tableRecordURL(): ?string
     {
@@ -18,6 +24,6 @@ class Folder extends ChordPage
 
     public function afterCreateRedirectURL(): ?string
     {
-        return PageResource::getUrl('children', ['parent' => $this->id]);
+        return null;
     }
 }

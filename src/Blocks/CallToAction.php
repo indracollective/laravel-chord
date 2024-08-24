@@ -6,7 +6,7 @@ use Filament\Forms\Components\TextInput;
 
 class CallToAction extends BlockType
 {
-    protected static string $component = 'chord::blocks.call-to-action';
+    protected static string $component = 'chord::site.blocks.call-to-action';
 
     public function __construct(public string $title, public string $subtitle) {}
 

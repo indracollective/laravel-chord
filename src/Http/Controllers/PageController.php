@@ -15,8 +15,6 @@ class PageController extends Controller
             abort(404);
         }
 
-        return view('chord::components.site.page.index', [
-            'page' => $page,
-        ]);
+        return view('chord::page', ['page' => $page]);
     }
 }
