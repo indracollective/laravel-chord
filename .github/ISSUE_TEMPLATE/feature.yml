@@ -3,7 +3,10 @@ name: 🛠️ Feature Request
 description: Suggest an idea to help improve Laravel Chord
 title: "[Feature]: "
 labels:
-  - "feature_request"
+  - "enhancement"
+projects: ["live-source/1"]
+assignees:
+  - sheadawson
 
 body:
   - type: markdown
