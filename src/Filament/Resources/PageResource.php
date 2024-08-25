@@ -24,6 +24,8 @@ class PageResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $modelLabel = 'Page';
+
     public static function getSettingsFormSchema(): array
     {
         $pageTypes = Chord::getPageTypeOptionsForSelect();

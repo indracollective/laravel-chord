@@ -1,0 +1,61 @@
+UPTO:
+
+- Make Settings accessible from the page edit page
+- Navigation Builder
+- SEO meta data
+- Draft pages
+- Preview
+- Versioning
+
+
+- Design the edit page view in.. figma?
+-
+
+- Need to implement more attributes on the page model
+    - Meta title, Meta desc, keywords, Menu title, Show in Menus, ??> Image, OG Image?
+- Need page types implementation for folder pages
+    - Other base page types are:
+        - Folder
+          - Attributes: none
+        - BlogCollection
+           - Attributes:
+        - Redirect:
+            - Attributes: link DTO (type (url, email, phone, page, media, value, new Window)
+                These can go in type_data
+        - BlogPost: Leave this one for now
+            - Attributes:  author, tags, categories - actually these can all be many_many realtionships
+               then we don't need a separate table for them. Only tricky part is versioning...
+
+page.type_data vs page.typeRecord()
+	•	Use JSON Column When:
+	•	The page type has few additional fields, and these fields are not used in complex queries.
+	•	The page type’s structure might change frequently, and you want to avoid frequent schema migrations.
+	•	The additional data is optional, or the page type is not central to your application’s core functionality.
+	•	Use Separate Tables When:
+	•	The page type has a well-defined and stable set of additional fields.
+	•	You need to enforce strong data integrity, with relationships to other tables.
+	•	The data will be used in complex queries, filtering, or reporting.
+
+- Sortable Page table - not quite working with complex combos of grouping and sorting
+- ^ Solution for now:
+    - Implement page types, specifically the folder page type
+    - Clicking on a folder page will open a new page with a list of pages in that folder
+    - Enable sorting on the list of pages in the folder page
+
+Inspiration:
+https://twitter.com/tnylea/status/1772061052848497074
+
+
+
+Editor:
+
+QuillJS: https://github.com/joelwmale/livewire-quill
+
+
+Media manager:
+
+YES: https://github.com/awcodes/filament-curator
+
+
+
+NO: Tiptap: https://filamentphp.com/plugins/awcodes-tiptap-editor#custom-blocks
