@@ -3,9 +3,12 @@
 namespace LiveSource\Chord;
 
 use Illuminate\Support\Arr;
+use LiveSource\Chord\Services\Themes;
 
 class Chord
 {
+    public Themes $themes;
+
     protected array $blockTypes = [];
 
     protected array $pageTypes = [];
@@ -20,7 +23,10 @@ class Chord
 
     protected array $modifyChildPagesTableActionUsing = [];
 
-    public function __construct() {}
+    public function __construct()
+    {
+        $this->themes = app(Themes::class);
+    }
 
     public function registerPageType(string $class, ?string $key): void
     {
@@ -69,5 +75,10 @@ class Chord
     public function getPageTypeOptionsForSelect(): array
     {
         return Arr::mapWithKeys($this->pageTypes, fn ($class, $key) => [$key => $class::label()]);
+    }
+
+    public function themes(): Themes
+    {
+        return $this->themes;
     }
 }

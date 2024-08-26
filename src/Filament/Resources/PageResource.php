@@ -3,6 +3,7 @@
 namespace LiveSource\Chord\Filament\Resources;
 
 use CodeWithDennis\FilamentSelectTree\SelectTree;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -13,6 +14,7 @@ use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Validation\Rules\Unique;
+use LiveSource\Chord\Enums\Menu;
 use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Facades\ModifyChord;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
@@ -56,6 +58,13 @@ class PageResource extends Resource
                         })
                         ->unique(modifyRuleUsing: function (Unique $rule, $get) {
                             return $rule->where('parent_id', $get('parent_id'))->ignore($get('id'));
+                        }),
+                    CheckboxList::make('show_in_menus')
+                        ->options(Menu::class)
+                        ->afterStateHydrated(function ($component, $state, $context) {
+                            if (! filled($state) && $context === 'create') {
+                                $component->state([Menu::Header, Menu::Footer]);
+                            }
                         }),
                 ]),
         ];

@@ -17,6 +17,7 @@ use LiveSource\Chord\Commands\ChordCommand;
 use LiveSource\Chord\Facades\Chord as ChordFacade;
 use LiveSource\Chord\Models\ContentPage;
 use LiveSource\Chord\Models\Folder;
+use LiveSource\Chord\Services\Themes;
 use LiveSource\Chord\Testing\TestsChord;
 use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -68,9 +69,8 @@ class ChordServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void
     {
-        $this->app->bind(ModifyChord::class, function () {
-            return new ModifyChord;
-        });
+        $this->app->bind(ModifyChord::class, fn () => new ModifyChord);
+        $this->app->bind(Themes::class, fn () => new Themes);
     }
 
     public function packageBooted(): void

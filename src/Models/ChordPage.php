@@ -37,11 +37,13 @@ class ChordPage extends Model implements ChordPageContract, Sortable
         'parent_id',
         'order_column',
         'type',
+        'show_in_menus',
     ];
 
     protected $casts = [
         'content' => 'array',
         'meta' => 'array',
+        'show_in_menus' => 'array',
     ];
 
     protected static string $defaultBaseLayout = 'site.page.default-layout';
@@ -158,10 +160,4 @@ class ChordPage extends Model implements ChordPageContract, Sortable
     {
         return static::query()->where('parent_id', $this->parent_id);
     }
-
-    public static function configureEditPageSettingsTableAction(EditPageSettingsTableAction $action): void {}
-
-    public static function configureEditPageSettingsAction(EditPageSettingsAction $action): void {}
-
-    public static function configurePageContentForm(Form $form): void {}
 }

@@ -2,6 +2,7 @@
 
 namespace LiveSource\Chord\Filament\Resources\PageResource\Pages;
 
+use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\Contracts\HasRecord;
 use Filament\Resources\Pages\ListRecords;
@@ -46,12 +47,26 @@ class ListPages extends ListRecords
         $parent = $this->getParentPage();
         $pageTypes = Chord::getPageTypeOptionsForSelect();
 
-        $actions = [
-            CreatePageAction::make()->fillForm(fn (): array => [
-                'type' => array_key_first($pageTypes),
-                'parent_id' => $this->getParentPage()?->id,
-            ]),
-        ];
+        $actions = [];
+
+        if ($this->getParentPage()) {
+            $actions[] = Action::make('up')
+                ->iconbutton()
+                ->icon('heroicon-o-arrow-turn-left-up')
+                ->url(function () {
+                    if ($this->getParentPage()->parent_id) {
+                        return $this->getResource()::getUrl('children', ['parent' => $this->getParentPage()->parent_id]);
+                    } else {
+                        return $this->getResource()::getUrl('index');
+                    }
+                })
+                ->color('gray');
+        }
+
+        $actions[] = CreatePageAction::make()->fillForm(fn (): array => [
+            'type' => array_key_first($pageTypes),
+            'parent_id' => $this->getParentPage()?->id,
+        ]);
 
         if ($this->getParentPage()) {
             $actions[] = ActionGroup::make([
