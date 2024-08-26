@@ -6,14 +6,16 @@ use Filament\Actions\EditAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use LiveSource\Chord\Models\ChordPage;
 
-class EditPageSettingsAction extends EditAction
+class EditPageAction extends EditAction
 {
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->iconButton()
-            ->icon('heroicon-o-cog-6-tooth')
+            ->icon('heroicon-o-pencil-square')
             ->size('lg')
-            ->form(fn (ChordPage $record) => PageResource::getSettingsFormSchema($this));
+            ->url(fn (ChordPage $record) => PageResource::getUrl('edit', ['record' => $record->id]))
+            ->hidden(fn (ChordPage $record) => ! $record->hasContentForm());
     }
 }

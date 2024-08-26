@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Filament\Actions\CreatePageAction;
+use LiveSource\Chord\Filament\Actions\EditPageAction;
+use LiveSource\Chord\Filament\Actions\EditPageSettingsAction;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use LiveSource\Chord\Models\ChordPage;
@@ -22,27 +24,40 @@ class ListPages extends ListRecords
 
     public ?ChordPage $parentPage = null;
 
-    public function mount(): void
+    public function getHeading(): string
     {
-        if (request()->parent) {
-            $this->parentPage = ChordPage::findOrFail(request()->parent);
-            $this->heading = $this->parentPage->title;
+        return $this->getParentPage()?->title ?? 'Pages';
+    }
+
+    public function getParentPage(): ?ChordPage
+    {
+        if (! $this->parentPage) {
+            if ($parentId = request()->parent) {
+                $this->parentPage = ChordPage::findOrFail($parentId);
+            }
         }
 
-        parent::mount();
+        return $this->parentPage;
     }
 
     protected function getHeaderActions(): array
     {
-        $parent = $this->parentPage;
+        $parent = $this->getParentPage();
         $pageTypes = Chord::getPageTypeOptionsForSelect();
 
-        return [
+        $actions = [
             CreatePageAction::make()->fillForm(fn (): array => [
                 'type' => array_key_first($pageTypes),
-                'parent_id' => $this->parentPage?->id,
+                'parent_id' => $this->getParentPage()?->id,
             ]),
         ];
+
+        if ($this->getParentPage()) {
+            $actions[] = EditPageAction::make()->record($this->getParentPage());
+            $actions[] = EditPageSettingsAction::make()->record($this->getParentPage());
+        }
+
+        return $actions;
     }
 
     public function getBreadcrumbs(): array
@@ -55,8 +70,8 @@ class ListPages extends ListRecords
             //...(filled($breadcrumb = $this->getBreadcrumb()) ? [$breadcrumb] : []),
         ];
 
-        if ($this->parentPage) {
-            $breadcrumbs["$resourceURL/{$this->parentPage->id}"] = $this->parentPage->title;
+        if ($parentPage = $this->getParentPage()) {
+            $breadcrumbs["$resourceURL/{$parentPage->id}"] = $parentPage->title;
         }
 
         $breadcrumbs[] = 'List';
@@ -67,13 +82,27 @@ class ListPages extends ListRecords
     public function table(Table $table): Table
     {
         $table = static::getResource()::table($table);
-        $parent = $this->parentPage;
+        $parent = $this->getParentPage();
 
         $table
-            // filter pages by parent if parent is set
-            ->modifyQueryUsing(fn (Builder $query): Builder => (
-                $parent ? $query->where('parent_id', $parent->id) : $query->where('parent_id', null)
-            ))
+            ->modifyQueryUsing(function (Builder $query) use ($parent): Builder {
+                // if search is set and parent is set, redirect to the index page with the search
+                $search = $this->getTableSearch();
+                if ($search && $parent?->id) {
+                    $this->redirect($this->getResource()::getURL('index') . "?tableSearch=$search");
+
+                    return $query;
+                }
+
+                // limit the query to the current parent or top level
+                if ($parent) {
+                    $query->where('parent_id', $parent->id);
+                } elseif (! $search) {
+                    $query->where('parent_id', null);
+                }
+
+                return $query;
+            })
             // allow the PageType to update the url of the table row link
             ->recordUrl(function (Model $record, Table $table): ?string {
                 if ($url = $record->tableRecordURL($table)) {

@@ -4,7 +4,6 @@ namespace LiveSource\Chord\Filament\Actions;
 
 use Filament\Actions\CreateAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
-use LiveSource\Chord\Models\ChordPage;
 
 class CreatePageAction extends CreateAction
 {
@@ -15,11 +14,12 @@ class CreatePageAction extends CreateAction
         parent::setUp();
 
         $this
-            ->label('')
-            ->icon('heroicon-s-plus-circle')
+            ->label('Create Page')
+            ->icon('heroicon-o-plus-circle')
+            ->color('success')
             ->iconButton()
-            ->size('xl')
+            ->size('lg')
             ->modalWidth('md')
-            ->form(fn (ChordPage $record) => PageResource::getSettingsFormSchema($this));
+            ->form(fn () => PageResource::getSettingsFormSchema($this));
     }
 }

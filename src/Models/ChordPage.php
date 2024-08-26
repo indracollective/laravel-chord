@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use LiveSource\Chord\Concerns\ManagesPagePaths;
 use LiveSource\Chord\Contracts\ChordPageContract;
 use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsAction;
@@ -20,6 +21,7 @@ use Spatie\EloquentSortable\SortableTrait;
 class ChordPage extends Model implements ChordPageContract, Sortable
 {
     use HasInheritors;
+    use ManagesPagePaths;
     use SortableTrait;
 
     protected $table = 'chord_pages';
@@ -29,6 +31,7 @@ class ChordPage extends Model implements ChordPageContract, Sortable
     protected $fillable = [
         'title',
         'slug',
+        'path',
         'content',
         'meta',
         'parent_id',

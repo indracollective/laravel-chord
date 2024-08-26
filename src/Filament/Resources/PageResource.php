@@ -51,6 +51,7 @@ class PageResource extends Resource
                         ->unique(modifyRuleUsing: function (Unique $rule, $get) {
                             return $rule->where('parent_id', $get('parent_id'))->ignore($get('id'));
                         }),
+                    TextInput::make('path'),
                 ]),
         ];
     }
@@ -76,14 +77,22 @@ class PageResource extends Resource
             ->reorderable('order_column')
             ->defaultSort('order_column')
             ->columns([
-                Tables\Columns\TextColumn::make('id'),
-                Tables\Columns\TextColumn::make('title'),
-                Tables\Columns\TextColumn::make('slug'),
-                Tables\Columns\TextColumn::make('type'),
-                Tables\Columns\TextColumn::make('parent_id'),
-                Tables\Columns\TextColumn::make('order_column'),
+                Tables\Columns\TextColumn::make('title')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('type')->formatStateUsing(fn (string $state) => str($state)->headline()),
+                Tables\Columns\TextColumn::make('path'),
             ])
+            ->emptyStateHeading(function (Table $table) {
+                if ($table->hasSearch()) {
+
+                    return 'No pages found for search';
+                }
+
+                return 'No pages';
+            })
             ->configure()
+            ->filters([
+            ])
             ->actions([
                 EditPageTableAction::make('edit'),
                 EditPageSettingsTableAction::make('settings'),
