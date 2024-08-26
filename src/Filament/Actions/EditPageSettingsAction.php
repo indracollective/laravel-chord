@@ -11,9 +11,12 @@ class EditPageSettingsAction extends EditAction
     protected function setUp(): void
     {
         parent::setUp();
-        $this->iconButton()
-            ->icon('heroicon-o-cog-6-tooth')
-            ->size('lg')
-            ->form(fn (ChordPage $record) => PageResource::getSettingsFormSchema($this));
+
+        $this
+            ->icon(fn () => 'heroicon-o-cog-6-tooth')
+            ->label('Settings')
+            ->form(fn (ChordPage $record) => PageResource::getSettingsFormSchema($this))
+            ->recordTitle(fn (ChordPage $record) => $record->title)
+            ->modalHeading(fn (ChordPage $record) => 'Configure ' . $record->title);
     }
 }

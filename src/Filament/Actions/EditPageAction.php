@@ -12,9 +12,11 @@ class EditPageAction extends EditAction
     {
         parent::setUp();
 
-        $this->iconButton()
+        $this
+            //->iconButton()
+//            ->size('lg')
             ->icon('heroicon-o-pencil-square')
-            ->size('lg')
+            ->label('Edit')
             ->url(fn (ChordPage $record) => PageResource::getUrl('edit', ['record' => $record->id]))
             ->hidden(fn (ChordPage $record) => ! $record->hasContentForm());
     }

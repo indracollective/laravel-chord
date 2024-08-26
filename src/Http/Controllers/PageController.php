@@ -2,15 +2,15 @@
 
 namespace LiveSource\Chord\Http\Controllers;
 
-//use App\Http\Controllers\Controller;
 use Illuminate\Routing\Controller;
 use LiveSource\Chord\Models\ChordPage;
 
 class PageController extends Controller
 {
-    public function __invoke(string $url = '/')
+    public function __invoke(string $path = 'home')
     {
-        $page = ChordPage::firstWhere('slug', $url);
+        $page = ChordPage::firstWhere('path', $path);
+
         if (! $page) {
             abort(404);
         }

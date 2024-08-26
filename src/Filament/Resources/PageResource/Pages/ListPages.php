@@ -2,6 +2,7 @@
 
 namespace LiveSource\Chord\Filament\Resources\PageResource\Pages;
 
+use Filament\Actions\ActionGroup;
 use Filament\Actions\Contracts\HasRecord;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\EditAction;
@@ -53,8 +54,11 @@ class ListPages extends ListRecords
         ];
 
         if ($this->getParentPage()) {
-            $actions[] = EditPageAction::make()->record($this->getParentPage());
-            $actions[] = EditPageSettingsAction::make()->record($this->getParentPage());
+            $actions[] = ActionGroup::make([
+                EditPageAction::make()->record($this->getParentPage())->label('Edit'),
+                // todo not sure why this keeps reverting to pencil icon...
+                EditPageSettingsAction::make()->record($this->getParentPage())->label('Configure'),
+            ]);
         }
 
         return $actions;

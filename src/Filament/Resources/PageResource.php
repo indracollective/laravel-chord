@@ -7,7 +7,9 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Validation\Rules\Unique;
@@ -48,10 +50,13 @@ class PageResource extends Resource
                         ->generateSlug(),
                     TextInput::make('slug')
                         ->required()
+                        ->live(onBlur: false)
+                        ->afterStateUpdated(function (string $operation, $state, Set $set) {
+                            $set('slug', str($state)->slug());
+                        })
                         ->unique(modifyRuleUsing: function (Unique $rule, $get) {
                             return $rule->where('parent_id', $get('parent_id'))->ignore($get('id'));
                         }),
-                    TextInput::make('path'),
                 ]),
         ];
     }
@@ -80,7 +85,12 @@ class PageResource extends Resource
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type')->formatStateUsing(fn (string $state) => str($state)->headline()),
-                Tables\Columns\TextColumn::make('path'),
+                Tables\Columns\TextColumn::make('path')
+                    ->url(fn (ChordPage $record) => $record->getLink(true))
+                    ->openUrlInNewTab()
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->iconPosition(IconPosition::After)
+                    ->color('primary'),
             ])
             ->emptyStateHeading(function (Table $table) {
                 if ($table->hasSearch()) {

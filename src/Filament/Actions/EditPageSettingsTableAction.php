@@ -22,7 +22,9 @@ class EditPageSettingsTableAction extends EditAction
             ->modalHeading('Edit Page Settings')
             ->modalWidth('sm')
             ->hidden(fn (ChordPage $record) => ! $record->hasContentForm())
-            ->form(fn (ChordPage $record) => PageResource::getSettingsFormSchema($this));
+            ->form(fn (ChordPage $record) => PageResource::getSettingsFormSchema($this))
+            ->recordTitle(fn (ChordPage $record) => $record->title)
+            ->modalHeading(fn (ChordPage $record) => 'Configure ' . $record->title);
 
     }
 }
