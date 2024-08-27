@@ -7,7 +7,7 @@ use Filament\Forms\Components\TextInput;
 
 class Hero extends BlockType
 {
-    protected static string $component = 'site.blocks.hero';
+    protected static string $component = 'blocks.hero';
 
     public function __construct(public string $title, public string $content) {}
 

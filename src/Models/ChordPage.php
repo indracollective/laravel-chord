@@ -46,9 +46,9 @@ class ChordPage extends Model implements ChordPageContract, Sortable
         'show_in_menus' => 'array',
     ];
 
-    protected static string $defaultBaseLayout = 'site.page.default-layout';
+    protected static string $defaultBaseLayout = 'pages.layout';
 
-    protected static string $defaultLayout = 'site.page.index';
+    protected static string $defaultLayout = '';
 
     public static function defaultBaseLayout(string $layout): void
     {
@@ -62,36 +62,12 @@ class ChordPage extends Model implements ChordPageContract, Sortable
 
     public function getBaseLayout(): string
     {
-        return $this->findView('baseLayout');
+        return $this->meta['baseLayout'] ?? static::$defaultBaseLayout;
     }
 
     public function getLayout(): string
     {
-        return $this->findView('layout');
-    }
-
-    public function findView(string $for): string
-    {
-        $view = match ($for) {
-            'baseLayout' => $this->meta['baseLayout'] ?? static::$defaultBaseLayout,
-            'layout' => $this->meta['layout'] ?? static::$defaultLayout,
-        };
-
-        $candidates = collect(config('chord.themes'))
-            ->map(fn ($theme) => $theme === 'app' ? $view : "$theme::$view")
-            ->toArray();
-
-        foreach ($candidates as $candidate) {
-            $test = str_contains('::', $candidate) ?
-                str_replace('::', '::components.', $candidate) :
-                'components.' . $candidate;
-
-            if (view()->exists($test)) {
-                return $candidate;
-            }
-        }
-
-        throw new \Exception("$for view for page type " . static::class . ' does not exist. Possible candidates were: ' . implode(', ', $candidates));
+        return $this->meta['layout'] ?? static::$defaultLayout;
     }
 
     public function contentForm(Form $form): ?Form

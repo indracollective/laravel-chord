@@ -7,7 +7,7 @@ use Filament\Forms\Components\TextInput;
 
 class RichContent extends BlockType
 {
-    protected static string $component = 'chord::site.blocks.rich-content';
+    protected static string $component = 'blocks.rich-content';
 
     public function __construct(public string $title, public string $content) {}
 

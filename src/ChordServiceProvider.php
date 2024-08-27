@@ -10,6 +10,7 @@ use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\View;
 use LiveSource\Chord\Blocks\CallToAction;
 use LiveSource\Chord\Blocks\Hero;
 use LiveSource\Chord\Blocks\RichContent;
@@ -17,7 +18,6 @@ use LiveSource\Chord\Commands\ChordCommand;
 use LiveSource\Chord\Facades\Chord as ChordFacade;
 use LiveSource\Chord\Models\ContentPage;
 use LiveSource\Chord\Models\Folder;
-use LiveSource\Chord\Services\Themes;
 use LiveSource\Chord\Testing\TestsChord;
 use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -70,11 +70,20 @@ class ChordServiceProvider extends PackageServiceProvider
     public function packageRegistered(): void
     {
         $this->app->bind(ModifyChord::class, fn () => new ModifyChord);
-        $this->app->bind(Themes::class, fn () => new Themes);
     }
 
     public function packageBooted(): void
     {
+        View::composer('*', function ($view) {
+            $view->with('pagesForMenu', function (string $menu) {
+                return \LiveSource\Chord\Facades\Chord::pagesForMenu($menu);
+            });
+
+            $view->with('chordComponent', function (string $component) {
+                return \LiveSource\Chord\Facades\Chord::resolveComponent($component);
+            });
+        });
+
         ChordFacade::registerPageTypes([
             ContentPage::class,
             Folder::class,

@@ -3,6 +3,7 @@
 namespace LiveSource\Chord\Blocks;
 
 use Filament\Forms\Components\Builder\Block as BuilderBlock;
+use LiveSource\Chord\Facades\Chord;
 use Spatie\LaravelData\Data;
 
 abstract class BlockType extends Data
@@ -33,7 +34,7 @@ abstract class BlockType extends Data
 
     public function getComponent(): string
     {
-        return static::$component ?? '';
+        return Chord::resolveComponent(static::$component);
     }
 
     public function isLivewireComponent(): bool

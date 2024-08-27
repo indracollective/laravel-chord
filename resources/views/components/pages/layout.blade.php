@@ -14,12 +14,12 @@
         href="assets/images/favicon.png"
         type="image/x-icon"
     />
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
+    @vite(['resources/css/app.css'])
 </head>
 <body>
-<header>
-    This is the default base layout
-</header>
+<x-chord::component component="header.index" />
 {{ $slot }}
+@livewireScripts
 </body>
 </html>

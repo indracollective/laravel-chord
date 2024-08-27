@@ -2,13 +2,11 @@
 
 namespace LiveSource\Chord;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
-use LiveSource\Chord\Services\Themes;
 
 class Chord
 {
-    public Themes $themes;
-
     protected array $blockTypes = [];
 
     protected array $pageTypes = [];
@@ -23,10 +21,7 @@ class Chord
 
     protected array $modifyChildPagesTableActionUsing = [];
 
-    public function __construct()
-    {
-        $this->themes = app(Themes::class);
-    }
+    public function __construct() {}
 
     public function registerPageType(string $class, ?string $key): void
     {
@@ -77,8 +72,54 @@ class Chord
         return Arr::mapWithKeys($this->pageTypes, fn ($class, $key) => [$key => $class::label()]);
     }
 
-    public function themes(): Themes
+    public function getThemes(): array
     {
-        return $this->themes;
+        return config('chord.themes');
+    }
+
+    public function resolveComponent(string $component): string
+    {
+        $candidates = collect($this->getThemes())
+            ->map(fn ($theme) => $theme === 'app' ? $component : "$theme::$component")
+            ->toArray();
+
+        foreach ($candidates as $candidate) {
+            $test = str_contains($candidate, '::') ?
+                str_replace('::', '::components.', $candidate) :
+                'components.' . $candidate;
+
+            if (view()->exists($test)) {
+                return $candidate;
+            }
+
+            if (view()->exists($candidate)) {
+                dd("found $candidate");
+
+                return $candidate;
+            }
+
+            if (view()->exists($test)) {
+                dd("found $test");
+
+                return $candidate;
+            }
+        }
+
+        throw new \Exception("No components for $component exist. Possible candidates were: " . implode(', ', $candidates));
+    }
+
+    public function pagesForMenu(string $menu): Collection
+    {
+        $pages = \LiveSource\Chord\Models\ChordPage::where('parent_id', null)
+            ->whereJsonContains('show_in_menus', $menu)
+            ->with(['children' => function ($query) {
+                $query->whereJsonContains('show_in_menus', 'header')
+                    ->with(['children' => function ($query) {
+                        $query->whereJsonContains('show_in_menus', 'header');
+                    }]);
+            }])
+            ->get();
+
+        return $pages;
     }
 }
