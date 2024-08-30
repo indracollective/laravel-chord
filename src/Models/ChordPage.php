@@ -104,7 +104,18 @@ class ChordPage extends Model implements ChordPageContract, Sortable
 
     public function getLink($absolute = false): string
     {
-        return $absolute ? rtrim(config('app.url'), '/') . "/$this->path" : "/$this->path";
+        $path = $this->path === '/' ? $this->path : "/$this->path";
+        return $absolute ? rtrim(config('app.url'), '/') . $path : $path;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->path === request()->path();
+    }
+
+    public function isSection(): bool
+    {
+        return !$this->isActive() && str_starts_with(request()->path(), $this->path);
     }
 
     public static function label(): string
@@ -125,6 +136,11 @@ class ChordPage extends Model implements ChordPageContract, Sortable
     public function children(): HasMany
     {
         return $this->hasMany(ChordPage::class, 'parent_id');
+    }
+
+    public function hasChildren(): bool
+    {
+        return $this->children()->count() > 0;
     }
 
     public function getChildTypes(): array

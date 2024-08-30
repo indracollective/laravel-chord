@@ -7,7 +7,7 @@ use LiveSource\Chord\Models\ChordPage;
 
 class PageController extends Controller
 {
-    public function __invoke(string $path = 'home')
+    public function __invoke(string $path = '/')
     {
         $page = ChordPage::firstWhere('path', $path);
 
@@ -15,6 +15,6 @@ class PageController extends Controller
             abort(404);
         }
 
-        return view('chord::page', ['page' => $page]);
+        return view('components.pages.page', ['page' => $page]);
     }
 }
