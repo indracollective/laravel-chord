@@ -105,6 +105,7 @@ class ChordPage extends Model implements ChordPageContract, Sortable
     public function getLink($absolute = false): string
     {
         $path = $this->path === '/' ? $this->path : "/$this->path";
+
         return $absolute ? rtrim(config('app.url'), '/') . $path : $path;
     }
 
@@ -115,7 +116,7 @@ class ChordPage extends Model implements ChordPageContract, Sortable
 
     public function isSection(): bool
     {
-        return !$this->isActive() && str_starts_with(request()->path(), $this->path);
+        return ! $this->isActive() && str_starts_with(request()->path(), $this->path);
     }
 
     public static function label(): string
