@@ -100,6 +100,14 @@ class PageResource extends Resource
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->iconPosition(IconPosition::After)
                     ->color('primary'),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'draft' => 'gray',
+                        'revised' => 'warning',
+                        'published' => 'success',
+                    }),
+                Tables\Columns\IconColumn::make('is_current')->boolean(),
             ])
             ->emptyStateHeading(function (Table $table) {
                 if ($table->hasSearch()) {

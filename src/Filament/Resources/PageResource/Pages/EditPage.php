@@ -27,4 +27,25 @@ class EditPage extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function getFormActions(): array
+    {
+        return [
+            Actions\Action::make('saveDraft')->action('saveDraft'),
+            Actions\Action::make('publish')->action('publish'),
+            $this->getCancelFormAction(),
+        ];
+    }
+
+    public function saveDraft(): void
+    {
+        $this->getRecord()->asDraft();
+        $this->save(false, true);
+    }
+
+    public function publish(): void
+    {
+
+        $this->save(false, true);
+    }
 }

@@ -14,12 +14,14 @@ use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsAction;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
+use Oddvalue\LaravelDrafts\Concerns\HasDrafts;
 use Parental\HasChildren as HasInheritors;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
 
 class ChordPage extends Model implements ChordPageContract, Sortable
 {
+    use HasDrafts;
     use HasInheritors;
     use ManagesPagePaths;
     use SortableTrait;
@@ -122,6 +124,15 @@ class ChordPage extends Model implements ChordPageContract, Sortable
     public static function label(): string
     {
         return str((new \ReflectionClass(static::class))->getShortName())->headline()->toString();
+    }
+
+    public function getStatusAttribute(): string
+    {
+        if ($this->isPublished()) {
+            return $this->isCurrent() ? 'published' : 'revised';
+        }
+
+        return 'draft';
     }
 
     public static function defaultKey(): string

@@ -23,6 +23,7 @@
         "php": "^8.1",
         "codewithdennis/filament-select-tree": "^3.0",
         "filament/filament": "^3.0",
+        "oddvalue/laravel-drafts": "^1.5",
         "robsontenorio/mary": "^1.35",
         "spatie/eloquent-sortable": "^4.4",
         "spatie/laravel-data": "^4.7",

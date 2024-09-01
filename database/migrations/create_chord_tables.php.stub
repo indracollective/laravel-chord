@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('pages', function (Blueprint $table) {
+        Schema::create('chord_pages', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->string('slug');
@@ -18,16 +18,17 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->jsonb('content')->nullable();
             $table->jsonb('meta')->nullable();
-            $table->foreignId('parent_id')->nullable()->constrained('pages')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('parent_id')->nullable()->constrained('chord_pages')->cascadeOnDelete()->cascadeOnUpdate();
             $table->integer('order_column')->default(0);
             $table->jsonb('show_in_menus')->nullable();
             $table->unique(['slug', 'parent_id']);
+            $table->drafts();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('pages');
+        Schema::dropIfExists('chord_pages');
     }
 };
