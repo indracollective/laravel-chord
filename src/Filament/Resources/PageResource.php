@@ -19,6 +19,8 @@ use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Facades\ModifyChord;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
 use LiveSource\Chord\Filament\Actions\EditPageTableAction;
+use LiveSource\Chord\Filament\Actions\PublishPageTableAction;
+use LiveSource\Chord\Filament\Actions\UnpublishPageTableAction;
 use LiveSource\Chord\Filament\Actions\ViewChildPagesTableAction;
 use LiveSource\Chord\Models\ChordPage;
 
@@ -91,6 +93,7 @@ class PageResource extends Resource
             ->reorderable('order_column')
             ->defaultSort('order_column')
             ->columns([
+                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type')->formatStateUsing(fn (string $state) => str($state)->headline()),
@@ -107,7 +110,10 @@ class PageResource extends Resource
                         'revised' => 'warning',
                         'published' => 'success',
                     }),
+                Tables\Columns\IconColumn::make('is_published')->boolean(),
                 Tables\Columns\IconColumn::make('is_current')->boolean(),
+                Tables\Columns\TextColumn::make('published_at')->dateTime(),
+                Tables\Columns\TextColumn::make('revisions.count')->label('Revisions')->numeric(),
             ])
             ->emptyStateHeading(function (Table $table) {
                 if ($table->hasSearch()) {
@@ -121,8 +127,15 @@ class PageResource extends Resource
             ->filters([
             ])
             ->actions([
-                EditPageTableAction::make('edit'),
-                EditPageSettingsTableAction::make('settings'),
+                Tables\Actions\ActionGroup::make([
+                    EditPageTableAction::make(),
+                    EditPageSettingsTableAction::make(),
+                    Tables\Actions\ActionGroup::make([
+                        PublishPageTableAction::make(),
+                        UnpublishPageTableAction::make(),
+                    ])->dropdown(false),
+                ]),
+
                 ViewChildPagesTableAction::make('children'),
             ])
             ->bulkActions([

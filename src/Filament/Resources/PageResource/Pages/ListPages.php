@@ -105,6 +105,7 @@ class ListPages extends ListRecords
 
         $table
             ->modifyQueryUsing(function (Builder $query) use ($parent): Builder {
+                $query->current();
                 // if search is set and parent is set, redirect to the index page with the search
                 $search = $this->getTableSearch();
                 if ($search && $parent?->id) {

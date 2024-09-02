@@ -15,9 +15,7 @@ class ChordPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        $panel->resources([
-            PageResource::class,
-        ]);
+        $panel->resources([PageResource::class]);
     }
 
     public function boot(Panel $panel): void {}

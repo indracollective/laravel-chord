@@ -10,14 +10,14 @@ class EditPageSettingsTableAction extends EditAction
 {
     public static function getDefaultName(): ?string
     {
-        return '';
+        return 'settings';
     }
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->label('')
+        $this->label('Settings')
             ->icon('heroicon-o-cog-6-tooth')
             ->modalHeading('Edit Page Settings')
             ->modalWidth('sm')

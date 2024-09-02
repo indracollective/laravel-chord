@@ -6,9 +6,8 @@ use Filament\Tables\Actions\EditAction;
 
 class EditPageTableAction extends EditAction
 {
-    protected function setUp(): void
+    public static function getDefaultName(): ?string
     {
-        parent::setUp();
-        $this->label('');
+        return 'edit';
     }
 }

@@ -40,6 +40,7 @@ class ChordPage extends Model implements ChordPageContract, Sortable
         'order_column',
         'type',
         'show_in_menus',
+        'is_published',
     ];
 
     protected $casts = [
@@ -128,11 +129,24 @@ class ChordPage extends Model implements ChordPageContract, Sortable
 
     public function getStatusAttribute(): string
     {
-        if ($this->isPublished()) {
-            return $this->isCurrent() ? 'published' : 'revised';
+        if ($this->hasPublishedVersion()) {
+            return $this->isPublished() ? 'published' : 'revised';
         }
 
         return 'draft';
+    }
+
+    public function hasPublishedVersion(): bool
+    {
+        if ($this->isPublished()) {
+            return true;
+        }
+
+        return ChordPage::withDrafts()
+            ->where('uuid', $this->uuid)
+            ->whereNot('id', $this->id)
+            ->published()
+            ->count() > 0;
     }
 
     public static function defaultKey(): string
