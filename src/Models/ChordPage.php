@@ -18,6 +18,7 @@ use Oddvalue\LaravelDrafts\Concerns\HasDrafts;
 use Parental\HasChildren as HasInheritors;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
+use Wildside\Userstamps\Userstamps;
 
 class ChordPage extends Model implements ChordPageContract, Sortable
 {
@@ -25,6 +26,7 @@ class ChordPage extends Model implements ChordPageContract, Sortable
     use HasInheritors;
     use ManagesPagePaths;
     use SortableTrait;
+    use Userstamps;
 
     protected $table = 'chord_pages';
 
@@ -41,6 +43,9 @@ class ChordPage extends Model implements ChordPageContract, Sortable
         'type',
         'show_in_menus',
         'is_published',
+        'created_by',
+        'updated_by',
+        'deleted_by',
     ];
 
     protected $casts = [
@@ -82,7 +87,7 @@ class ChordPage extends Model implements ChordPageContract, Sortable
 
     public function tableRecordURL(): ?string
     {
-        return PageResource::getUrl('edit', ['record' => $this->id]);
+        return PageResource::getUrl('edit', ['record' => $this->uuid]);
     }
 
     public function afterCreateRedirectURL(): ?string
@@ -125,6 +130,18 @@ class ChordPage extends Model implements ChordPageContract, Sortable
     public static function label(): string
     {
         return str((new \ReflectionClass(static::class))->getShortName())->headline()->toString();
+    }
+
+    public function revisions(): HasMany
+    {
+        return $this->hasMany(static::class, $this->getUuidColumn(), $this->getUuidColumn())
+            ->withDrafts()
+            ->withoutGlobalScope('onlyCurrentInPreviewMode');
+    }
+
+    public function getRevisionsCountAttribute(): int
+    {
+        return $this->revisions()->count();
     }
 
     public function getStatusAttribute(): string
@@ -177,5 +194,10 @@ class ChordPage extends Model implements ChordPageContract, Sortable
     public function buildSortQuery(): Builder
     {
         return static::query()->where('parent_id', $this->parent_id);
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'uuid';
     }
 }

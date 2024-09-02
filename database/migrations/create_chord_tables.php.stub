@@ -24,6 +24,9 @@ return new class extends Migration
             $table->unique(['slug', 'parent_id']);
             $table->drafts();
             $table->timestamps();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->unsignedBigInteger('deleted_by')->nullable();
         });
     }
 

@@ -32,6 +32,8 @@ class PageResource extends Resource
 
     protected static ?string $modelLabel = 'Page';
 
+    protected static ?string $recordRouteKeyName = 'uuid';
+
     public static function getSettingsFormSchema(): array
     {
         $pageTypes = Chord::getPageTypeOptionsForSelect();
@@ -113,7 +115,7 @@ class PageResource extends Resource
                 Tables\Columns\IconColumn::make('is_published')->boolean(),
                 Tables\Columns\IconColumn::make('is_current')->boolean(),
                 Tables\Columns\TextColumn::make('published_at')->dateTime(),
-                Tables\Columns\TextColumn::make('revisions.count')->label('Revisions')->numeric(),
+                Tables\Columns\TextColumn::make('revisions_count')->label('Revisions')->numeric(),
             ])
             ->emptyStateHeading(function (Table $table) {
                 if ($table->hasSearch()) {
@@ -130,6 +132,10 @@ class PageResource extends Resource
                 Tables\Actions\ActionGroup::make([
                     EditPageTableAction::make(),
                     EditPageSettingsTableAction::make(),
+                    Tables\Actions\Action::make('revisions')
+                        ->label('History')
+                        ->url(fn (ChordPage $record) => PageResource::getUrl('revisions', ['record' => $record->uuid]))
+                        ->icon('heroicon-o-clock'),
                     Tables\Actions\ActionGroup::make([
                         PublishPageTableAction::make(),
                         UnpublishPageTableAction::make(),
@@ -145,10 +151,25 @@ class PageResource extends Resource
             ]);
     }
 
+    public static function revisionsTable(Table $table): Table
+    {
+        return $table->columns([
+            Tables\Columns\TextColumn::make('id'),
+            Tables\Columns\TextColumn::make('title'),
+            Tables\Columns\IconColumn::make('is_published')->boolean(),
+            Tables\Columns\IconColumn::make('is_current')->boolean(),
+            Tables\Columns\TextColumn::make('created_at')->dateTime(),
+            Tables\Columns\TextColumn::make('updated_at')->dateTime(),
+            Tables\Columns\TextColumn::make('published_at')->dateTime(),
+            Tables\Columns\TextColumn::make('published_by.name'),
+
+        ]);
+    }
+
     public static function getRelations(): array
     {
         return [
-            //
+            //RevisionsRelationManager::class,
         ];
     }
 
@@ -157,8 +178,8 @@ class PageResource extends Resource
         return [
             'index' => PageResource\Pages\ListPages::route('/'),
             'children' => PageResource\Pages\ListPages::route('/{parent}'),
-            'edit' => PageResource\Pages\EditPage::route('/{record}/edit'),
-            'test' => PageResource\Pages\TestPage::route('/test'),
+            'edit' => PageResource\Pages\EditPage::route('/{record}/edit/{revision?}'),
+            'revisions' => PageResource\Pages\ListRevisions::route('/{record?}/revisions'),
         ];
     }
 }

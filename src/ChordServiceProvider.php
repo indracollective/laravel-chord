@@ -74,6 +74,7 @@ class ChordServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
+        //Livewire::component('chord-revisions', RevisionsRelationManager::class);
         View::composer('*', function ($view) {
             $view->with('pagesForMenu', function (string $menu) {
                 return \LiveSource\Chord\Facades\Chord::pagesForMenu($menu);

@@ -33,7 +33,7 @@
             @if ((! $hasCombinedRelationManagerTabsWithContent) || (! count($relationManagers)))
                 {{ $form() }}
             @endif
-
+            
             @if (count($relationManagers))
                 <x-filament-panels::resources.relation-managers
                     :active-locale="isset($activeLocale) ? $activeLocale : null"

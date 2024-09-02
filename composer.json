@@ -28,7 +28,8 @@
         "spatie/eloquent-sortable": "^4.4",
         "spatie/laravel-data": "^4.7",
         "spatie/laravel-package-tools": "^1.15.0",
-        "tightenco/parental": "^1.4"
+        "tightenco/parental": "^1.4",
+        "wildside/userstamps": "^2.4"
     },
     "require-dev": {
         "laravel/pint": "^1.0",
