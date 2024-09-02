@@ -61,7 +61,7 @@ class PageResource extends Resource
                             $set('slug', str($state)->slug());
                         })
                         ->unique(modifyRuleUsing: function (Unique $rule, $get) {
-                            return $rule->where('parent_id', $get('parent_id'))->ignore($get('id'));
+                            return $rule->where('parent_id', $get('parent_id'))->ignore($get('uuid'));
                         }),
                     CheckboxList::make('show_in_menus')
                         ->options(Menu::class)
@@ -95,7 +95,7 @@ class PageResource extends Resource
             ->reorderable('order_column')
             ->defaultSort('order_column')
             ->columns([
-                Tables\Columns\TextColumn::make('id'),
+                //Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type')->formatStateUsing(fn (string $state) => str($state)->headline()),
@@ -113,9 +113,19 @@ class PageResource extends Resource
                         'published' => 'success',
                     }),
                 Tables\Columns\IconColumn::make('is_published')->boolean(),
-                Tables\Columns\IconColumn::make('is_current')->boolean(),
-                Tables\Columns\TextColumn::make('published_at')->dateTime(),
-                Tables\Columns\TextColumn::make('revisions_count')->label('Revisions')->numeric(),
+                Tables\Columns\TextColumn::make('creator.name')
+                    ->label('Created')
+                    ->prefix('By: ')
+                    ->description(fn (ChordPage $record) => 'On: ' . $record->created_at),
+                Tables\Columns\TextColumn::make('editor.name')
+                    ->label('Updated')
+                    ->prefix('By: ')
+                    ->description(fn (ChordPage $record) => 'On: ' . $record->updated_at),
+                Tables\Columns\TextColumn::make('publisher.name')
+                    ->label('Published')
+                    ->prefix('By: ')
+                    ->description(fn (ChordPage $record) => 'On: ' . $record->published_at),
+                //Tables\Columns\TextColumn::make('revisions_count')->label('Revisions')->numeric(),
             ])
             ->emptyStateHeading(function (Table $table) {
                 if ($table->hasSearch()) {
@@ -158,11 +168,18 @@ class PageResource extends Resource
             Tables\Columns\TextColumn::make('title'),
             Tables\Columns\IconColumn::make('is_published')->boolean(),
             Tables\Columns\IconColumn::make('is_current')->boolean(),
-            Tables\Columns\TextColumn::make('created_at')->dateTime(),
-            Tables\Columns\TextColumn::make('updated_at')->dateTime(),
-            Tables\Columns\TextColumn::make('published_at')->dateTime(),
-            Tables\Columns\TextColumn::make('published_by.name'),
-
+            Tables\Columns\TextColumn::make('creator.name')
+                ->label('Created')
+                ->prefix('By: ')
+                ->description(fn (ChordPage $record) => 'On: ' . $record->created_at),
+            Tables\Columns\TextColumn::make('editor.name')
+                ->label('Updated')
+                ->prefix('By: ')
+                ->description(fn (ChordPage $record) => 'On: ' . $record->updated_at),
+            Tables\Columns\TextColumn::make('publisher.name')
+                ->label('Published')
+                ->prefix('By: ')
+                ->description(fn (ChordPage $record) => 'On: ' . $record->published_at),
         ]);
     }
 
