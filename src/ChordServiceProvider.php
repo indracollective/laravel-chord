@@ -16,10 +16,12 @@ use LiveSource\Chord\Blocks\Hero;
 use LiveSource\Chord\Blocks\RichContent;
 use LiveSource\Chord\Commands\ChordCommand;
 use LiveSource\Chord\Facades\Chord as ChordFacade;
+use LiveSource\Chord\Livewire\PagePreview;
 use LiveSource\Chord\Models\ContentPage;
 use LiveSource\Chord\Models\Folder;
 use LiveSource\Chord\Testing\TestsChord;
 use Livewire\Features\SupportTesting\Testable;
+use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -74,7 +76,8 @@ class ChordServiceProvider extends PackageServiceProvider
 
     public function packageBooted(): void
     {
-        //Livewire::component('chord-revisions', RevisionsRelationManager::class);
+        Livewire::component('chord-page-preview', PagePreview::class);
+
         View::composer('*', function ($view) {
             $view->with('pagesForMenu', function (string $menu) {
                 return \LiveSource\Chord\Facades\Chord::pagesForMenu($menu);

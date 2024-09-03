@@ -76,6 +76,16 @@ class EditPage extends EditRecord
         return $record;
     }
 
+    public function liveSave(): void
+    {
+        if ($this->getRecord()->isPublished()) {
+            $this->saveDraft();
+        } else {
+            $this->getRecord()->withoutRevision();
+            $this->save(false, true);
+        }
+    }
+
     public function saveDraft(): void
     {
         $this->getRecord()->asDraft();

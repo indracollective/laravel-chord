@@ -97,11 +97,7 @@
                 <div class="w-1.5 border-x border-black h-8"></div>
             </div>
             <div class="w-full bg-white flex-grow">
-                <iframe
-                    x-ref="iframe"
-                    src="{{ $record->getLink(absolute: true) }}"
-                    class="w-full h-full">
-                </iframe>
+                <livewire:chord-page-preview :page="$record" />
             </div>
         </div>
     </div>

@@ -13,7 +13,7 @@ class PageBuilder extends Builder
 
         $this->extraFieldWrapperAttributes(['class' => 'chord-page-builder'], true);
         $this->collapsible(true);
-        $this->collapsed(true);
+        //$this->collapsed(true);
         $blocks = collect(Chord::getBlockTypes())->map(function ($type) {
             return $type::getBuilderBlock();
         })->toArray();

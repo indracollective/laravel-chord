@@ -4,6 +4,7 @@ namespace LiveSource\Chord\Blocks;
 
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
+use LiveSource\Chord\Filament\Resources\PageResource\Pages\EditPage;
 
 class RichContent extends BlockType
 {
@@ -15,7 +16,11 @@ class RichContent extends BlockType
     {
         return [
             TextInput::make('title')
-                ->required(),
+                ->required()
+                ->live(onBlur: false)
+                ->afterStateUpdated(function (EditPage $livewire) {
+                    $livewire->liveSave();
+                }),
 
             RichEditor::make('content')->toolbarButtons([
                 'attachFiles',
