@@ -18,20 +18,6 @@ class EditPage extends EditRecord
 
     protected ?string $maxContentWidth = 'full';
 
-    public ?string $previewUrl = null;
-
-    public function mount(int | string $record): void
-    {
-        parent::mount($record);
-
-        $this->updatedPreviewUrl();
-    }
-
-    public function updatedPreviewUrl(): void
-    {
-        $this->previewUrl = $this->getRecord()->getLink(absolute: true) . '?preview=' . time();
-    }
-
     public function getExtraBodyAttributes(): array
     {
         return [
@@ -93,18 +79,18 @@ class EditPage extends EditRecord
     public function liveSave(): void
     {
         if ($this->getRecord()->isPublished()) {
-            $this->saveDraft();
+            $this->saveDraft(false, false);
         } else {
             $this->getRecord()->withoutRevision();
-            $this->save(false, true);
+            $this->save(false, false);
         }
-        $this->updatedPreviewUrl();
+        $this->dispatch('page-updated');
     }
 
-    public function saveDraft(): void
+    public function saveDraft(bool $shouldRedirect = true, bool $shouldSendSavedNotification = true): void
     {
         $this->getRecord()->asDraft();
-        $this->save(false, true);
+        $this->save($shouldRedirect, $shouldSendSavedNotification);
     }
 
     public function publish(): void

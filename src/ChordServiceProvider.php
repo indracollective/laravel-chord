@@ -2,6 +2,7 @@
 
 namespace LiveSource\Chord;
 
+use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Set;
 use Filament\Support\Assets\Asset;
@@ -16,6 +17,7 @@ use LiveSource\Chord\Blocks\Hero;
 use LiveSource\Chord\Blocks\RichContent;
 use LiveSource\Chord\Commands\ChordCommand;
 use LiveSource\Chord\Facades\Chord as ChordFacade;
+use LiveSource\Chord\Filament\Resources\PageResource\Pages\EditPage;
 use LiveSource\Chord\Livewire\PagePreview;
 use LiveSource\Chord\Models\ContentPage;
 use LiveSource\Chord\Models\Folder;
@@ -118,6 +120,15 @@ class ChordServiceProvider extends PackageServiceProvider
                         return;
                     }
                     $set('slug', str($state)->slug());
+                });
+
+            return $this;
+        });
+
+        Field::macro('refreshesPreview', function () {
+            $this->live(onBlur: false, debounce: 500)
+                ->afterStateUpdated(function (EditPage $livewire) {
+                    $livewire->liveSave();
                 });
 
             return $this;
