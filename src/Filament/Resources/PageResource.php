@@ -95,7 +95,7 @@ class PageResource extends Resource
             ->reorderable('order_column')
             ->defaultSort('order_column')
             ->columns([
-                //Tables\Columns\TextColumn::make('id'),
+                Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type')->formatStateUsing(fn (string $state) => str($state)->headline()),

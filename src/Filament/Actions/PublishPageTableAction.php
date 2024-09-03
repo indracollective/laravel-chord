@@ -26,8 +26,11 @@ class PublishPageTableAction extends Action
                     ->where('is_published', true)
                     ->update(['is_published' => false]));
 
-                $record->withoutRevision()->update([...$data, 'is_published' => 1]);
-
+                $record->{$record->getPublishedAtColumn()} ??= now();
+                $record->withoutRevision()
+                    ->setPublisher()
+                    ->publish()
+                    ->save();
             });
     }
 }

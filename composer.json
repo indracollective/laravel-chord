@@ -23,7 +23,7 @@
         "php": "^8.1",
         "codewithdennis/filament-select-tree": "^3.0",
         "filament/filament": "^3.0",
-        "oddvalue/laravel-drafts": "^1.5",
+        "oddvalue/laravel-drafts": "dev-patches",
         "robsontenorio/mary": "^1.35",
         "spatie/eloquent-sortable": "^4.4",
         "spatie/laravel-data": "^4.7",
@@ -72,6 +72,12 @@
             }
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/sheadawson/laravel-drafts"
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true
 }

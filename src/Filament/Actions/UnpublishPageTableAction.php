@@ -21,7 +21,9 @@ class UnpublishPageTableAction extends Action
             ->color('danger')
             ->hidden(fn (ChordPage $record) => ! $record->isPublished())
             ->action(function (ChordPage $record, array $data) {
-                $record->withoutRevision()->update(['is_published' => false]);
+                $record->withoutRevision();
+                $record->publisher()->dissociate();
+                $record->update(['is_published' => false]);
             });
     }
 }

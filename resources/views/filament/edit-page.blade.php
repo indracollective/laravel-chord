@@ -3,13 +3,44 @@
         'fi-resource-edit-record-page',
         'fi-resource-' . str_replace('/', '-', $this->getResource()::getSlug()),
         'fi-resource-record-' . $record->getKey(),
+        'chord-edit-page-container'
     ])
 >
-    <div x-data="{ leftWidth: '50%', resizing: false }"
-         @mousemove.window="if (resizing) { leftWidth = `${($event.clientX / $el.clientWidth) * 100}%` }"
-         @mouseup.window="resizing = false"
-         class="flex w-full h-full">
-        <div :style="'width: ' + leftWidth" class="border-r border-gray-200 pr-4">
+    <div class="flex chord-edit-page-panel"
+         x-data="{
+            leftOffset: false,
+            leftWidth: $persist('50%').as('chord-edit-page-form-width'),
+            resizing: false,
+            init() {
+                setTimeout(() => {
+                    this.leftOffset = $el.getBoundingClientRect().left + 20
+                    this.clientWidth = $el.clientWidth
+                    console.log('init with', this.leftOffset)
+                }, 100)
+            },
+            handleMouseMove($event) {
+                if (this.resizing && Math.abs($event.movementX) > 2) {
+                    this.pauseIframePointerEvents()
+                    this.leftWidth = `${Math.round( ((($event.clientX - this.leftOffset)) / this.clientWidth) * 100)}%`
+                }
+            },
+            handleMouseUp($event) {
+                this.resizing = false
+                this.resumeIframePointerEvents()
+            },
+            pauseIframePointerEvents() {
+                this.$refs.iframe.style.pointerEvents = 'none'
+            },
+            resumeIframePointerEvents() {
+                this.$refs.iframe.style.pointerEvents = ''
+            }
+         }"
+         @mousemove.window="handleMouseMove($event)"
+         @mouseup.window="handleMouseUp($event)"
+    >
+        <!-- Left Column -->
+        <div class="h-full overflow-y-auto px-0.5" :style="'width: ' + leftWidth"
+        >
             @capture($form)
             <x-filament-panels::form
                 id="form"
@@ -33,7 +64,7 @@
             @if ((! $hasCombinedRelationManagerTabsWithContent) || (! count($relationManagers)))
                 {{ $form() }}
             @endif
-            
+
             @if (count($relationManagers))
                 <x-filament-panels::resources.relation-managers
                     :active-locale="isset($activeLocale) ? $activeLocale : null"
@@ -55,7 +86,9 @@
 
             <x-filament-panels::page.unsaved-data-changes-alert />
         </div>
-        <div class="flex flex-grow">
+
+        <!-- Right Column -->
+        <div class="flex flex-grow h-full overflow-y-auto">
             <!-- Resizer -->
             <div
                 @mousedown="resizing = true"
@@ -64,7 +97,11 @@
                 <div class="w-1.5 border-x border-black h-8"></div>
             </div>
             <div class="w-full bg-white flex-grow">
-                <iframe src="{{ $record->link }}" class="w-full h-full"></iframe>
+                <iframe
+                    x-ref="iframe"
+                    src="{{ $record->getLink(absolute: true) }}"
+                    class="w-full h-full">
+                </iframe>
             </div>
         </div>
     </div>

@@ -4,9 +4,11 @@ namespace LiveSource\Chord\Filament\Resources\PageResource\Pages;
 
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Support\Enums\IconPosition;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LiveSource\Chord\Filament\Resources\PageResource;
+use LiveSource\Chord\Models\ChordPage;
 
 class EditPage extends EditRecord
 {
@@ -27,6 +29,17 @@ class EditPage extends EditRecord
     {
         return [
             Actions\DeleteAction::make(),
+            Actions\Action::make('revisions')
+                ->label('History')
+                ->url(fn (ChordPage $record) => PageResource::getUrl('revisions', ['record' => $record->uuid]))
+                ->icon('heroicon-o-clock'),
+            Actions\Action::make('open')
+                ->label('Open')
+                ->url(fn (ChordPage $record) => $record->getLink(true))
+                ->icon('heroicon-o-arrow-top-right-on-square')
+                ->iconPosition(IconPosition::After)
+                ->openUrlInNewTab()
+                ->color('primary'),
         ];
     }
 

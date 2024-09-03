@@ -20,6 +20,11 @@ class CreatePageAction extends CreateAction
             ->iconButton()
             ->size('lg')
             ->modalWidth('md')
-            ->form(fn () => PageResource::getSettingsFormSchema($this));
+            ->form(fn () => PageResource::getSettingsFormSchema($this))
+            ->mutateFormDataUsing(function (array $data): array {
+                $data['is_published'] = false;
+
+                return $data;
+            });
     }
 }
