@@ -19,7 +19,10 @@ class RichContent extends BlockType
                 ->required()
                 ->live(onBlur: false)
                 ->afterStateUpdated(function (EditPage $livewire) {
+                    // save the updates to the database
                     $livewire->liveSave();
+
+                    // now... how to update the page preview?
                 }),
 
             RichEditor::make('content')->toolbarButtons([

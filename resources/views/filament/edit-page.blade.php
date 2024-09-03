@@ -97,7 +97,19 @@
                 <div class="w-1.5 border-x border-black h-8"></div>
             </div>
             <div class="w-full bg-white flex-grow">
-                <livewire:chord-page-preview :page="$record" />
+                {{  $previewUrl }} ---
+                {{--                <livewire:chord-page-preview :page="$record" />--}}
+                <iframe
+                    x-data="{
+                        src: $wire.entangle('previewUrl'),
+                        init() {
+                            alert(this.src)
+                        }
+                    }"
+                    x-ref="iframe"
+                    x-bind:src="src"
+                    class="w-full h-full">
+                </iframe>
             </div>
         </div>
     </div>

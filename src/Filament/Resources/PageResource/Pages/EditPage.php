@@ -18,6 +18,20 @@ class EditPage extends EditRecord
 
     protected ?string $maxContentWidth = 'full';
 
+    public ?string $previewUrl = null;
+
+    public function mount(int | string $record): void
+    {
+        parent::mount($record);
+
+        $this->updatedPreviewUrl();
+    }
+
+    public function updatedPreviewUrl(): void
+    {
+        $this->previewUrl = $this->getRecord()->getLink(absolute: true) . '?preview=' . time();
+    }
+
     public function getExtraBodyAttributes(): array
     {
         return [
@@ -84,6 +98,7 @@ class EditPage extends EditRecord
             $this->getRecord()->withoutRevision();
             $this->save(false, true);
         }
+        $this->updatedPreviewUrl();
     }
 
     public function saveDraft(): void

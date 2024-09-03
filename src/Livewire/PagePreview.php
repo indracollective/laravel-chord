@@ -21,7 +21,7 @@ class PagePreview extends Component
         return <<<'HTML'
         <iframe
             x-ref="iframe"
-            src="{{ $page->getLink(absolute: true) }}"
+            src="{{ $page->getLink(absolute: true) }}?preview=1"
             class="w-full h-full">
         </iframe>
         HTML;
