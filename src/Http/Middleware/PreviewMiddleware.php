@@ -7,6 +7,7 @@ namespace LiveSource\Chord\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Oddvalue\LaravelDrafts\Facades\LaravelDrafts;
+use Symfony\Component\HttpFoundation\Response;
 
 class PreviewMiddleware
 {
@@ -15,5 +16,10 @@ class PreviewMiddleware
         LaravelDrafts::previewMode(true);
 
         return $next($request);
+    }
+
+    public function terminate(Request $request, Response $response): void
+    {
+        LaravelDrafts::previewMode(false);
     }
 }

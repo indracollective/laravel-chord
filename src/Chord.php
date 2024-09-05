@@ -110,16 +110,24 @@ class Chord
 
     public function pagesForMenu(string $menu): Collection
     {
-        $pages = \LiveSource\Chord\Models\ChordPage::where('parent_id', null)
+        $pages = $this->getBasePageClass()::where('parent_id', null)
             ->whereJsonContains('show_in_menus', $menu)
+            ->orderBy($this->getBasePageClass()::getOrderColumnName())
             ->with(['children' => function ($query) {
                 $query->whereJsonContains('show_in_menus', 'header')
+                    ->orderBy($this->getBasePageClass()::getOrderColumnName())
                     ->with(['children' => function ($query) {
-                        $query->whereJsonContains('show_in_menus', 'header');
+                        $query->whereJsonContains('show_in_menus', 'header')
+                            ->orderBy($this->getBasePageClass()::getOrderColumnName());
                     }]);
             }])
             ->get();
 
         return $pages;
+    }
+
+    public function getBasePageClass(): string
+    {
+        return config('chord.base_page_class');
     }
 }

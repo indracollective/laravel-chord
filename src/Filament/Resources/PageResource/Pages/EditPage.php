@@ -7,6 +7,7 @@ use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Enums\IconPosition;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use LiveSource\Chord\Filament\Actions\EditPageSettingsAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use LiveSource\Chord\Models\ChordPage;
 
@@ -40,6 +41,7 @@ class EditPage extends EditRecord
                 ->iconPosition(IconPosition::After)
                 ->openUrlInNewTab()
                 ->color('primary'),
+            EditPageSettingsAction::make(),
         ];
     }
 

@@ -2661,10 +2661,6 @@ select {
   width: 100vw;
 }
 
-.w-12 {
-  width: 3rem;
-}
-
 .min-w-0 {
   min-width: 0px;
 }
@@ -3448,10 +3444,6 @@ select {
   border-inline-end-width: 1px;
 }
 
-.border-r {
-  border-right-width: 1px;
-}
-
 .border-s {
   border-inline-start-width: 1px;
 }
@@ -3786,10 +3778,6 @@ select {
 
 .pe-8 {
   padding-inline-end: 2rem;
-}
-
-.pr-4 {
-  padding-right: 1rem;
 }
 
 .ps-0 {

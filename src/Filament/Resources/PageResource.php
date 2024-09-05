@@ -91,11 +91,14 @@ class PageResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $orderColumn = static::$model::getOrderColumnName();
+
         return $table
-            ->reorderable('order_column')
-            ->defaultSort('order_column')
+            ->reorderable($orderColumn)
+            ->defaultSort($orderColumn)
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
+                Tables\Columns\TextColumn::make('order_column'),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type')->formatStateUsing(fn (string $state) => str($state)->headline()),

@@ -196,6 +196,11 @@ class ChordPage extends Model implements ChordPageContract, Sortable
         return static::query()->where('parent_id', $this->parent_id);
     }
 
+    public static function getOrderColumnName(): string
+    {
+        return (new static)->determineOrderColumnName();
+    }
+
     public function getRouteKeyName()
     {
         return 'uuid';
