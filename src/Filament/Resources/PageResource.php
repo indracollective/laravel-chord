@@ -19,6 +19,7 @@ use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Facades\ModifyChord;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
 use LiveSource\Chord\Filament\Actions\EditPageTableAction;
+use Livesource\Chord\Filament\Actions\PublishPageBulkAction;
 use LiveSource\Chord\Filament\Actions\PublishPageTableAction;
 use LiveSource\Chord\Filament\Actions\UnpublishPageTableAction;
 use LiveSource\Chord\Filament\Actions\ViewChildPagesTableAction;
@@ -98,7 +99,6 @@ class PageResource extends Resource
             ->defaultSort($orderColumn)
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
-                Tables\Columns\TextColumn::make('order_column'),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('type')->formatStateUsing(fn (string $state) => str($state)->headline()),
@@ -119,15 +119,15 @@ class PageResource extends Resource
                 Tables\Columns\TextColumn::make('creator.name')
                     ->label('Created')
                     ->prefix('By: ')
-                    ->description(fn (ChordPage $record) => 'On: ' . $record->created_at),
+                    ->description(fn (ChordPage $record) => 'On: '.$record->created_at),
                 Tables\Columns\TextColumn::make('editor.name')
                     ->label('Updated')
                     ->prefix('By: ')
-                    ->description(fn (ChordPage $record) => 'On: ' . $record->updated_at),
+                    ->description(fn (ChordPage $record) => 'On: '.$record->updated_at),
                 Tables\Columns\TextColumn::make('publisher.name')
                     ->label('Published')
                     ->prefix('By: ')
-                    ->description(fn (ChordPage $record) => 'On: ' . $record->published_at),
+                    ->description(fn (ChordPage $record) => 'On: '.$record->published_at),
                 //Tables\Columns\TextColumn::make('revisions_count')->label('Revisions')->numeric(),
             ])
             ->emptyStateHeading(function (Table $table) {
@@ -160,6 +160,7 @@ class PageResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    PublishPageBulkAction::make(),
                 ]),
             ]);
     }
@@ -174,15 +175,15 @@ class PageResource extends Resource
             Tables\Columns\TextColumn::make('creator.name')
                 ->label('Created')
                 ->prefix('By: ')
-                ->description(fn (ChordPage $record) => 'On: ' . $record->created_at),
+                ->description(fn (ChordPage $record) => 'On: '.$record->created_at),
             Tables\Columns\TextColumn::make('editor.name')
                 ->label('Updated')
                 ->prefix('By: ')
-                ->description(fn (ChordPage $record) => 'On: ' . $record->updated_at),
+                ->description(fn (ChordPage $record) => 'On: '.$record->updated_at),
             Tables\Columns\TextColumn::make('publisher.name')
                 ->label('Published')
                 ->prefix('By: ')
-                ->description(fn (ChordPage $record) => 'On: ' . $record->published_at),
+                ->description(fn (ChordPage $record) => 'On: '.$record->published_at),
         ]);
     }
 

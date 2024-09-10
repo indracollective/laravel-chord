@@ -1,11 +1,30 @@
 UPTO:
 
+- How do different CMSs handle publishing / unpublishing in heirarchical structures?
+
+SilverStripe
+
+Scenario 1: Unpublish a parent page with published children - children are unpublished
+Scenario 2: Publish a parent page with unpublished children - children are not published
+Scenario 3: Publish a page with an unpublished parent - No problem, child is published, viewable, parent is still unpublished
+
+Wagtail:
+
+Scenario 1: Unpublish a parent page with published children - prompts with info and option:
+    Are you sure you want to publish these pages?
+    Locations
+    This page has 6 unpublished subpages
+    Include descendants?
+
+Scenario 2: Publish a parent page with unpublished children - prompts with info and option as above
+Scenario 3: Publish a page with an unpublished parent - No problem, child is published, viewable, parent is still unpublished
+
+Conclusion: Wagtail is better in this scenario, replicate this.
+
 - Make Settings accessible from the page edit page
-- Navigation Builder
 - SEO meta data
 - Draft pages
 - Preview
-- Versioning
 
 
 - Design the edit page view in.. figma?

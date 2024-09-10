@@ -175,7 +175,7 @@ class ListPages extends ListRecords
 
     public function reorderTable(array $order): void
     {
-        ChordPage::setNewOrder($order);
+        Chord::getBasePageClass()::setNewOrder($order);
     }
 
     protected function configureEditAction(EditAction $action): void

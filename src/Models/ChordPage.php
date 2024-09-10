@@ -8,24 +8,24 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use LiveSource\Chord\Concerns\HasDrafts;
+use LiveSource\Chord\Concerns\HasSortableDrafts;
 use LiveSource\Chord\Concerns\ManagesPagePaths;
 use LiveSource\Chord\Contracts\ChordPageContract;
 use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsAction;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
-use Oddvalue\LaravelDrafts\Concerns\HasDrafts;
 use Parental\HasChildren as HasInheritors;
 use Spatie\EloquentSortable\Sortable;
-use Spatie\EloquentSortable\SortableTrait;
 use Wildside\Userstamps\Userstamps;
 
 class ChordPage extends Model implements ChordPageContract, Sortable
 {
     use HasDrafts;
     use HasInheritors;
+    use HasSortableDrafts;
     use ManagesPagePaths;
-    use SortableTrait;
     use Userstamps;
 
     protected $table = 'chord_pages';
@@ -114,7 +114,7 @@ class ChordPage extends Model implements ChordPageContract, Sortable
     {
         $path = $this->path === '/' ? $this->path : "/$this->path";
 
-        return $absolute ? rtrim(config('app.url'), '/') . $path : $path;
+        return $absolute ? rtrim(config('app.url'), '/').$path : $path;
     }
 
     public function isActive(): bool
@@ -130,40 +130,6 @@ class ChordPage extends Model implements ChordPageContract, Sortable
     public static function label(): string
     {
         return str((new \ReflectionClass(static::class))->getShortName())->headline()->toString();
-    }
-
-    public function revisions(): HasMany
-    {
-        return $this->hasMany(static::class, $this->getUuidColumn(), $this->getUuidColumn())
-            ->withDrafts()
-            ->withoutGlobalScope('onlyCurrentInPreviewMode');
-    }
-
-    public function getRevisionsCountAttribute(): int
-    {
-        return $this->revisions()->count();
-    }
-
-    public function getStatusAttribute(): string
-    {
-        if ($this->hasPublishedVersion()) {
-            return $this->isPublished() ? 'published' : 'revised';
-        }
-
-        return 'draft';
-    }
-
-    public function hasPublishedVersion(): bool
-    {
-        if ($this->isPublished()) {
-            return true;
-        }
-
-        return ChordPage::withDrafts()
-            ->where('uuid', $this->uuid)
-            ->whereNot('id', $this->id)
-            ->published()
-            ->count() > 0;
     }
 
     public static function defaultKey(): string

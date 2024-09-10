@@ -21,16 +21,7 @@ class PublishPageTableAction extends Action
             ->color('success')
             ->hidden(fn (ChordPage $record) => $record->isPublished())
             ->action(function (ChordPage $record, array $data) {
-                // Unpublish all other revisions and publish this one
-                $record::withoutTimestamps(fn () => $record->revisions()
-                    ->where('is_published', true)
-                    ->update(['is_published' => false]));
-
-                $record->{$record->getPublishedAtColumn()} ??= now();
-                $record->withoutRevision()
-                    ->setPublisher()
-                    ->publish()
-                    ->save();
+                $record->publish();
             });
     }
 }
