@@ -17,10 +17,12 @@ use Illuminate\Validation\Rules\Unique;
 use LiveSource\Chord\Enums\Menu;
 use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Facades\ModifyChord;
+use LiveSource\Chord\Filament\Actions\CreateChildPageTableAction;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
 use LiveSource\Chord\Filament\Actions\EditPageTableAction;
 use Livesource\Chord\Filament\Actions\PublishPageBulkAction;
 use LiveSource\Chord\Filament\Actions\PublishPageTableAction;
+use Livesource\Chord\Filament\Actions\UnpublishPageBulkAction;
 use LiveSource\Chord\Filament\Actions\UnpublishPageTableAction;
 use LiveSource\Chord\Filament\Actions\ViewChildPagesTableAction;
 use LiveSource\Chord\Models\ChordPage;
@@ -42,16 +44,6 @@ class PageResource extends Resource
         return [
             Grid::make(['default' => 1])
                 ->schema([
-                    Select::make('type')
-                        ->options($pageTypes)
-                        ->default(array_key_first($pageTypes) ?? null)
-                        ->selectablePlaceholder(false)
-                        ->required(),
-                    // todo make this only show folder options
-                    SelectTree::make('parent_id')
-                        ->placeholder('Top level')
-                        ->relationship('parent', 'title', 'parent_id')
-                        ->label('Parent'),
                     TextInput::make('title')
                         ->required()
                         ->generateSlug(),
@@ -64,6 +56,16 @@ class PageResource extends Resource
                         ->unique(modifyRuleUsing: function (Unique $rule, $get) {
                             return $rule->where('parent_id', $get('parent_id'))->ignore($get('uuid'));
                         }),
+                    Select::make('type')
+                        ->options($pageTypes)
+                        ->default(array_key_first($pageTypes) ?? null)
+                        ->selectablePlaceholder(false)
+                        ->required(),
+                    // todo make this only show folder options
+                    SelectTree::make('parent_id')
+                        ->placeholder('Top level')
+                        ->relationship('parent', 'title', 'parent_id')
+                        ->label('Parent'),
                     CheckboxList::make('show_in_menus')
                         ->options(Menu::class)
                         ->afterStateHydrated(function ($component, $state, $context) {
@@ -150,6 +152,7 @@ class PageResource extends Resource
                         ->url(fn (ChordPage $record) => PageResource::getUrl('revisions', ['record' => $record->uuid]))
                         ->icon('heroicon-o-clock'),
                     Tables\Actions\ActionGroup::make([
+                        CreateChildPageTableAction::make(),
                         PublishPageTableAction::make(),
                         UnpublishPageTableAction::make(),
                     ])->dropdown(false),
@@ -159,8 +162,9 @@ class PageResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
                     PublishPageBulkAction::make(),
+                    UnpublishPageBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

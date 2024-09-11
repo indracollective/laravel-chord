@@ -66,9 +66,7 @@ trait HasDrafts
         }
 
         // Unpublish all other revisions and publish this one
-        $this::withoutTimestamps(fn () => $this->revisions()
-            ->where('is_published', true)
-            ->update(['is_published' => false]));
+        $this->unpublish();
 
         // Update the published at column
         $this->{$this->getPublishedAtColumn()} ??= now();
@@ -100,6 +98,36 @@ trait HasDrafts
         $this->publish();
 
         $this->children()->get()->each(fn ($child) => $child->publishRecursively());
+
+        return $this;
+    }
+
+    public function unpublish(): static
+    {
+        if ($this->fireModelEvent('unpublishing') === false) {
+            return $this;
+        }
+
+        // Mark all revisions unpublished
+        $this::withoutTimestamps(fn () => $this->revisions()
+            ->where($this->getIsPublishedColumn(), true)
+            ->update([
+                $this->getPublishedAtColumn() => null,
+                $this->getIsPublishedColumn() => false,
+                $this->getPublisherColumns()['id'] => null,
+                $this->getPublisherColumns()['type'] => null,
+            ]));
+
+        $this->fireModelEvent('unpublished');
+
+        return $this;
+    }
+
+    public function unpublishRecursively(): static
+    {
+        $this->unpublish();
+
+        $this->children()->get()->each(fn ($child) => $child->unpublishRecursively());
 
         return $this;
     }

@@ -4,6 +4,7 @@ namespace LiveSource\Chord;
 
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Css;
@@ -19,6 +20,7 @@ use LiveSource\Chord\Commands\ChordCommand;
 use LiveSource\Chord\Facades\Chord as ChordFacade;
 use LiveSource\Chord\Filament\Resources\PageResource\Pages\EditPage;
 use LiveSource\Chord\Livewire\PagePreview;
+use LiveSource\Chord\Models\ChordPage;
 use LiveSource\Chord\Models\ContentPage;
 use LiveSource\Chord\Models\Folder;
 use LiveSource\Chord\Testing\TestsChord;
@@ -115,11 +117,11 @@ class ChordServiceProvider extends PackageServiceProvider
 
         TextInput::macro('generateSlug', function () {
             $this->live(onBlur: true)
-                ->afterStateUpdated(function (string $operation, $state, Set $set) {
+                ->afterStateUpdated(function (string $operation, $state, Set $set, Get $get) {
                     if ($operation !== 'create') {
                         return;
                     }
-                    $set('slug', str($state)->slug());
+                    $set('slug', ChordPage::generateSlug(fromString: $state, parentId: $get('parent_id')));
                 });
 
             return $this;
@@ -139,7 +141,7 @@ class ChordServiceProvider extends PackageServiceProvider
 
         // Handle Stubs
         if (app()->runningInConsole()) {
-            foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
+            foreach (app(Filesystem::class)->files(__DIR__.'/../stubs/') as $file) {
                 $this->publishes([
                     $file->getRealPath() => base_path("stubs/chord/{$file->getFilename()}"),
                 ], 'chord-stubs');
@@ -162,8 +164,8 @@ class ChordServiceProvider extends PackageServiceProvider
     {
         return [
             // AlpineComponent::make('chord', __DIR__ . '/../resources/dist/components/chord.js'),
-            Css::make('chord-styles', __DIR__ . '/../resources/dist/chord.css'),
-            Js::make('chord-scripts', __DIR__ . '/../resources/dist/chord.js'),
+            Css::make('chord-styles', __DIR__.'/../resources/dist/chord.css'),
+            Js::make('chord-scripts', __DIR__.'/../resources/dist/chord.js'),
         ];
     }
 

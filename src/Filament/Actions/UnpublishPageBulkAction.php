@@ -9,11 +9,11 @@ use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Actions\BulkAction;
 use Illuminate\Database\Eloquent\Collection;
 
-class PublishPageBulkAction extends BulkAction
+class UnpublishPageBulkAction extends BulkAction
 {
     public static function getDefaultName(): ?string
     {
-        return 'publish';
+        return 'unpublish';
     }
 
     protected function setUp(): void
@@ -21,52 +21,57 @@ class PublishPageBulkAction extends BulkAction
         parent::setUp();
 
         $this
-            ->label('Publish')
-            ->icon(FilamentIcon::resolve('heroicon-o-arrow-up-tray') ?? 'heroicon-o-arrow-up-tray')
-            ->color('success')
+            ->label('Unpublish')
+            ->icon(static::getDefaultIcon())
+            ->color('warning')
             ->deselectRecordsAfterCompletion()
-            ->modalHeading(fn (Collection $records) => $records->count() === 1 ? 'Publish \''.$records->first()->title.'\'' : 'Publish pages')
-            ->modalIcon(FilamentIcon::resolve('heroicon-o-arrow-up-tray') ?? 'heroicon-o-arrow-up-tray')
-            ->modalIconColor('success')
+            ->modalHeading(fn (Collection $records) => $records->count() === 1 ? 'Unpublish \''.$records->first()->title.'\'' : 'Unpublish pages')
+            ->modalIcon(static::getDefaultIcon())
+            ->modalIconColor('warning')
             ->modalDescription(fn (Collection $records) => $records->count() === 1 ?
-                'Are you sure you want to publish this page?' :
-                'Are you sure you want to publish these pages?'
+                'Are you sure you want to unpublish this page?' :
+                'Are you sure you want to unpublish these pages?'
             )
             ->modalAlignment(Alignment::Center)
             ->modalFooterActionsAlignment(Alignment::Center)
             ->modalSubmitActionLabel(__('filament-actions::modal.actions.confirm.label'))
             ->modalWidth(MaxWidth::Medium)
             ->form(function (Collection $records) {
-                $withUnpublishedChildren = $records->mapWithKeys(function ($record) {
-                    $children = $record->children()->current()->onlyDrafts();
+                $withPublishedChildren = $records->mapWithKeys(function ($record) {
+                    $children = $record->children()->published();
                     $numChildren = $children->count();
                     if ($numChildren === 0) {
                         return [];
                     }
                     $label = $numChildren === 1 ? '1 child' : "$numChildren children";
 
-                    return [$record->id => "Publish $label of '$record->title'"];
+                    return [$record->id => "Unpublish $label of '$record->title'"];
                 })->filter();
 
-                if ($withUnpublishedChildren->isEmpty()) {
+                if ($withPublishedChildren->isEmpty()) {
                     return null;
                 }
 
                 return [
                     CheckboxList::make('recursive')
-                        ->label('Would you like to publish descendant pages, too?')
-                        ->options($withUnpublishedChildren)
-                        ->default(array_keys($withUnpublishedChildren->toArray())),
+                        ->label('Would you like to unpublish descendant pages, too?')
+                        ->options($withPublishedChildren)
+                        ->default(array_keys($withPublishedChildren->toArray())),
                 ];
             })
             ->action(function (Collection $records, array $data) {
                 $records->each(function ($record) use ($data) {
                     if (in_array($record->id, $data['recursive'] ?? [])) {
-                        $record->publishRecursively();
+                        $record->unpublishRecursively();
                     } else {
-                        $record->publish();
+                        $record->unpublish();
                     }
                 });
             });
+    }
+
+    public static function getDefaultIcon(): ?string
+    {
+        return FilamentIcon::resolve('heroicon-o-arrow-down-tray') ?? 'heroicon-o-arrow-down-tray';
     }
 }

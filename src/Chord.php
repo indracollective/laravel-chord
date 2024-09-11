@@ -72,6 +72,11 @@ class Chord
         return Arr::mapWithKeys($this->pageTypes, fn ($class, $key) => [$key => $class::label()]);
     }
 
+    public function getDefaultPageType(): ?string
+    {
+        return config('chord.default_page_type', array_keys($this->getPageTypeOptionsForSelect())[0] ?? null);
+    }
+
     public function getThemes(): array
     {
         return config('chord.themes');
@@ -86,7 +91,7 @@ class Chord
         foreach ($candidates as $candidate) {
             $test = str_contains($candidate, '::') ?
                 str_replace('::', '::components.', $candidate) :
-                'components.' . $candidate;
+                'components.'.$candidate;
 
             if (view()->exists($test)) {
                 return $candidate;
@@ -105,7 +110,7 @@ class Chord
             }
         }
 
-        throw new \Exception("No components for $component exist. Possible candidates were: " . implode(', ', $candidates));
+        throw new \Exception("No components for $component exist. Possible candidates were: ".implode(', ', $candidates));
     }
 
     public function pagesForMenu(string $menu): Collection
