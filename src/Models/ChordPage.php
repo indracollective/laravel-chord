@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use LiveSource\Chord\Concerns\HasDrafts;
+use LiveSource\Chord\Concerns\HasSite;
 use LiveSource\Chord\Concerns\HasSortableDrafts;
 use LiveSource\Chord\Concerns\ManagesPagePaths;
 use LiveSource\Chord\Contracts\ChordPageContract;
@@ -24,6 +25,7 @@ class ChordPage extends Model implements ChordPageContract, Sortable
 {
     use HasDrafts;
     use HasInheritors;
+    use HasSite;
     use HasSortableDrafts;
     use ManagesPagePaths;
     use Userstamps;
@@ -46,6 +48,7 @@ class ChordPage extends Model implements ChordPageContract, Sortable
         'created_by',
         'updated_by',
         'deleted_by',
+        'site_id',
     ];
 
     protected $casts = [

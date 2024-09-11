@@ -88,7 +88,9 @@ trait HasDrafts
             $this->fireModelEvent('published');
         });
 
-        $this->save();
+        if ($this->id) {
+            $this->save();
+        }
 
         return $this;
     }

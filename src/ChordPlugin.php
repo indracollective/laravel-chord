@@ -5,6 +5,7 @@ namespace LiveSource\Chord;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use LiveSource\Chord\Filament\Resources\PageResource;
+use LiveSource\Chord\Filament\Resources\SiteResource;
 use LiveSource\Chord\Http\Middleware\PreviewMiddleware;
 
 class ChordPlugin implements Plugin
@@ -18,11 +19,13 @@ class ChordPlugin implements Plugin
     {
         $panel
             ->discoverLivewireComponents(
-                dirname(__FILE__) . '/Filament/Resources/PageResource/RelationManagers',
+                dirname(__FILE__).'/Filament/Resources/PageResource/RelationManagers',
                 'LiveSource\\Chord\\Filament\\Resources\\PageResource\\RelationManagers',
             )
-            //->discoverResources(dirname(__FILE__) . '/Filament/Resources', 'LiveSource\\Chord\\Filament\\Resources')
-            ->resources([PageResource::class])
+            ->resources([
+                PageResource::class,
+                SiteResource::class,
+            ])
             ->middleware([PreviewMiddleware::class], isPersistent: true);
     }
 

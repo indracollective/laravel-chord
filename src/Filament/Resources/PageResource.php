@@ -31,11 +31,13 @@ class PageResource extends Resource
 {
     protected static ?string $model = ChordPage::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $modelLabel = 'Page';
 
     protected static ?string $recordRouteKeyName = 'uuid';
+
+    protected static ?string $navigationGroup = 'CMS';
 
     public static function getSettingsFormSchema(): array
     {
