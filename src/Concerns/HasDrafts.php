@@ -35,6 +35,30 @@ trait HasDrafts
     }
 
     /**
+     * Extra method to get the publish statuses as an array.
+     * for populating a list of badges
+     */
+    public function getPublishStatusesAttribute(): array
+    {
+        $statuses = [];
+        if ($this->hasPublishedVersion()) {
+            $statuses[] = 'published';
+            if (! $this->isPublished()) {
+                $statuses[] = 'revised';
+            }
+        } else {
+            $statuses[] = 'draft';
+        }
+
+        return $statuses;
+    }
+
+    public function getPublishStatusesStringAttribute(): string
+    {
+        return implode(', ', $this->publish_statuses);
+    }
+
+    /**
      * Extra method to check if the page has a published version.
      */
     public function hasPublishedVersion(): bool
@@ -44,6 +68,7 @@ trait HasDrafts
         }
 
         return static::withDrafts()
+            ->withoutGlobalScope('onlyCurrentInPreviewMode')
             ->where('uuid', $this->uuid)
             ->whereNot('id', $this->id)
             ->published()

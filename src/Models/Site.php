@@ -16,6 +16,7 @@ class Site extends Model
         'title',
         'protocol',
         'hostname',
+        'is_default',
         'meta',
         'is_published',
         'created_by',

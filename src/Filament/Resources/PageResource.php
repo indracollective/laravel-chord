@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rules\Unique;
 use LiveSource\Chord\Enums\Menu;
 use LiveSource\Chord\Facades\Chord;
@@ -102,37 +103,47 @@ class PageResource extends Resource
             ->reorderable($orderColumn)
             ->defaultSort($orderColumn)
             ->columns([
-                Tables\Columns\TextColumn::make('id'),
+                Tables\Columns\TextColumn::make('id')
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('type')->formatStateUsing(fn (string $state) => str($state)->headline()),
+                Tables\Columns\TextColumn::make('type')
+                    ->formatStateUsing(fn (string $state) => str($state)->headline()),
                 Tables\Columns\TextColumn::make('path')
                     ->url(fn (ChordPage $record) => $record->getLink(true))
                     ->openUrlInNewTab()
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->iconPosition(IconPosition::After)
-                    ->color('primary'),
-                Tables\Columns\TextColumn::make('status')
+                    ->color('primary')
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
+                Tables\Columns\TextColumn::make('publish_statuses_string')
+                    ->label('Status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'draft' => 'gray',
                         'revised' => 'warning',
                         'published' => 'success',
-                    }),
-                Tables\Columns\IconColumn::make('is_published')->boolean(),
+                    })
+                    ->separator(', '),
                 Tables\Columns\TextColumn::make('creator.name')
                     ->label('Created')
                     ->prefix('By: ')
-                    ->description(fn (ChordPage $record) => 'On: '.$record->created_at),
+                    ->description(fn (Model $record) => 'On: '.$record->created_at)
+                    ->placeholder('-')
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
                 Tables\Columns\TextColumn::make('editor.name')
                     ->label('Updated')
                     ->prefix('By: ')
-                    ->description(fn (ChordPage $record) => 'On: '.$record->updated_at),
+                    ->description(fn (Model $record) => 'On: '.$record->updated_at)
+                    ->placeholder('-'),
                 Tables\Columns\TextColumn::make('publisher.name')
                     ->label('Published')
                     ->prefix('By: ')
-                    ->description(fn (ChordPage $record) => 'On: '.$record->published_at),
-                //Tables\Columns\TextColumn::make('revisions_count')->label('Revisions')->numeric(),
+                    ->description(fn (Model $record) => 'On: '.$record->published_at)
+                    ->placeholder('-'),
             ])
             ->emptyStateHeading(function (Table $table) {
                 if ($table->hasSearch()) {
@@ -153,6 +164,18 @@ class PageResource extends Resource
                         ->label('History')
                         ->url(fn (ChordPage $record) => PageResource::getUrl('revisions', ['record' => $record->uuid]))
                         ->icon('heroicon-o-clock'),
+                    Tables\Actions\Action::make('view_published')
+                        ->label('View Published')
+                        ->url(fn (ChordPage $record) => $record->getLink(true))
+                        ->openUrlInNewTab()
+                        ->icon('heroicon-o-arrow-top-right-on-square')
+                        ->hidden(fn (ChordPage $record) => ! $record->hasPublishedVersion()),
+                    Tables\Actions\Action::make('view_revision')
+                        ->label('View Revision')
+                        ->url(fn (ChordPage $record) => $record->getLink(true, $record->id))
+                        ->openUrlInNewTab()
+                        ->icon('heroicon-o-arrow-top-right-on-square')
+                        ->hidden(fn (ChordPage $record) => $record->isPublished()),
                     Tables\Actions\ActionGroup::make([
                         CreateChildPageTableAction::make(),
                         PublishPageTableAction::make(),

@@ -113,11 +113,12 @@ class ChordPage extends Model implements ChordPageContract, Sortable
         return $this->hasContentForm;
     }
 
-    public function getLink($absolute = false): string
+    public function getLink(bool $absolute = false, ?int $revision = null): string
     {
         $path = $this->path === '/' ? $this->path : "/$this->path";
+        $link = $absolute ? rtrim(config('app.url'), '/').$path : $path;
 
-        return $absolute ? rtrim(config('app.url'), '/').$path : $path;
+        return $revision ? "$link?revision=$revision" : $link;
     }
 
     public function isActive(): bool

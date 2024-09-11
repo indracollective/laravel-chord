@@ -8,6 +8,21 @@ return new class extends Migration
 {
     public function up(): void
     {
+        Schema::create('sites', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->string('protocol');
+            $table->string('hostname');
+            $table->boolean('is_default')->default(false);
+            $table->string('meta_description')->nullable();
+            $table->drafts();
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
+            $table->integer('deleted_by')->nullable();
+            $table->timestamps();
+            $table->unique(['hostname']);
+        });
+
         Schema::create('chord_pages', function (Blueprint $table) {
             $table->id();
             $table->string('title');
@@ -19,20 +34,23 @@ return new class extends Migration
             $table->jsonb('content')->nullable();
             $table->jsonb('meta')->nullable();
             $table->foreignId('parent_id')->nullable()->constrained('chord_pages')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('site_id')->nullable()->constrained('sites')->cascadeOnDelete()->cascadeOnUpdate();
             $table->integer('order_column')->default(0);
             $table->jsonb('show_in_menus')->nullable();
-            $table->unique(['slug', 'parent_id', 'is_current']);
-            $table->unique(['slug', 'parent_id', 'is_published']);
+            $table->unique(['slug', 'parent_id', 'site_id']);
+            //$table->unique(['slug', 'parent_id', 'is_current']);
+            //$table->unique(['slug', 'parent_id', 'is_published']);
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
+            $table->integer('deleted_by')->nullable();
             $table->drafts();
             $table->timestamps();
-            $table->unsignedBigInteger('created_by')->nullable();
-            $table->unsignedBigInteger('updated_by')->nullable();
-            $table->unsignedBigInteger('deleted_by')->nullable();
         });
     }
 
     public function down(): void
     {
         Schema::dropIfExists('chord_pages');
+        Schema::dropIfExists('sites');
     }
 };

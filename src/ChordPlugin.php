@@ -22,10 +22,8 @@ class ChordPlugin implements Plugin
                 dirname(__FILE__).'/Filament/Resources/PageResource/RelationManagers',
                 'LiveSource\\Chord\\Filament\\Resources\\PageResource\\RelationManagers',
             )
-            ->resources([
-                PageResource::class,
-                SiteResource::class,
-            ])
+            //->discoverResources(dirname(__FILE__) . '/Filament/Resources', 'LiveSource\\Chord\\Filament\\Resources')
+            ->resources([PageResource::class, SiteResource::class])
             ->middleware([PreviewMiddleware::class], isPersistent: true);
     }
 

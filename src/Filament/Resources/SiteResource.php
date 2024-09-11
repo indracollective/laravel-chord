@@ -7,6 +7,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use LiveSource\Chord\Facades\ModifyChord;
 use LiveSource\Chord\Filament\Resources\SiteResource\Pages\ListSites;
 use LiveSource\Chord\Models\ChordPage;
@@ -37,32 +38,43 @@ class SiteResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('id'),
-                Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'draft' => 'gray',
-                        'revised' => 'warning',
-                        'published' => 'success',
-                    }),
-                Tables\Columns\IconColumn::make('is_published')->boolean(),
-                Tables\Columns\TextColumn::make('creator.name')
-                    ->label('Created')
-                    ->prefix('By: ')
-                    ->description(fn (ChordPage $record) => 'On: '.$record->created_at),
-                Tables\Columns\TextColumn::make('editor.name')
-                    ->label('Updated')
-                    ->prefix('By: ')
-                    ->description(fn (ChordPage $record) => 'On: '.$record->updated_at),
-                Tables\Columns\TextColumn::make('publisher.name')
-                    ->label('Published')
-                    ->prefix('By: ')
-                    ->description(fn (ChordPage $record) => 'On: '.$record->published_at),
-            ])
+        return $table->columns([
+            Tables\Columns\TextColumn::make('id')
+                ->toggleable()
+                ->toggledHiddenByDefault(),
+            Tables\Columns\TextColumn::make('title')
+                ->searchable(),
+            Tables\Columns\TextColumn::make('hostname')
+                ->searchable(),
+            Tables\Columns\IconColumn::make('is_default')
+                ->boolean(),
+            Tables\Columns\TextColumn::make('publish_statuses_string')
+                ->label('Status')
+                ->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    'draft' => 'gray',
+                    'revised' => 'warning',
+                    'published' => 'success',
+                })
+                ->separator(', '),
+            Tables\Columns\TextColumn::make('creator.name')
+                ->label('Created')
+                ->prefix('By: ')
+                ->description(fn (Model $record) => 'On: '.$record->created_at)
+                ->placeholder('-')
+                ->toggleable()
+                ->toggledHiddenByDefault(),
+            Tables\Columns\TextColumn::make('editor.name')
+                ->label('Updated')
+                ->prefix('By: ')
+                ->description(fn (Model $record) => 'On: '.$record->updated_at)
+                ->placeholder('-'),
+            Tables\Columns\TextColumn::make('publisher.name')
+                ->label('Published')
+                ->prefix('By: ')
+                ->description(fn (Model $record) => 'On: '.$record->published_at)
+                ->placeholder('-'),
+        ])
             ->configure()
             ->filters([
             ])
