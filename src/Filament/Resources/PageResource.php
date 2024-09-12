@@ -47,9 +47,16 @@ class PageResource extends Resource
         return [
             Grid::make(['default' => 1])
                 ->schema([
+                    // todo make this only show folder options
+                    SelectTree::make('parent_id')
+                        ->placeholder('Top level')
+                        ->relationship('parent', 'title', 'parent_id')
+                        ->label('Parent')
+                        ->generateSlug(),
                     TextInput::make('title')
                         ->required()
-                        ->generateSlug(),
+                        ->generateSlug()
+                        ->autofocus(),
                     TextInput::make('slug')
                         ->required()
                         ->live(onBlur: false)
@@ -64,11 +71,6 @@ class PageResource extends Resource
                         ->default(array_key_first($pageTypes) ?? null)
                         ->selectablePlaceholder(false)
                         ->required(),
-                    // todo make this only show folder options
-                    SelectTree::make('parent_id')
-                        ->placeholder('Top level')
-                        ->relationship('parent', 'title', 'parent_id')
-                        ->label('Parent'),
                     CheckboxList::make('show_in_menus')
                         ->options(Menu::class)
                         ->afterStateHydrated(function ($component, $state, $context) {

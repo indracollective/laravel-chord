@@ -21,6 +21,7 @@ use LiveSource\Chord\Filament\Resources\PageResource;
 use Parental\HasChildren as HasInheritors;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 use Wildside\Userstamps\Userstamps;
 
 class ChordPage extends Model implements ChordPageContract, HasHierarchy, Publishable, PublishableHierarchyContract, Sortable
@@ -162,5 +163,17 @@ class ChordPage extends Model implements ChordPageContract, HasHierarchy, Publis
     public function getChildTypes(): array
     {
         return Chord::getPageTypes();
+    }
+
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug')
+            ->preventOverwrite()
+            ->extraScope(fn ($builder) => $builder
+                ->where('parent_id', $this->parent_id)
+                ->whereNot('uuid', $this->uuid)
+            );
     }
 }

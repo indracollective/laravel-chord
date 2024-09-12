@@ -3,7 +3,6 @@
 namespace LiveSource\Chord;
 
 use Filament\Forms\Components\Field;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Support\Assets\Asset;
@@ -115,13 +114,19 @@ class ChordServiceProvider extends PackageServiceProvider
             $this->getAssetPackageName()
         );
 
-        TextInput::macro('generateSlug', function () {
+        Field::macro('generateSlug', function () {
             $this->live(onBlur: true)
                 ->afterStateUpdated(function (string $operation, $state, Set $set, Get $get) {
-                    if ($operation !== 'create') {
+                    if ($operation !== 'create' || ! $get('title')) {
                         return;
                     }
-                    $set('slug', ChordPage::generateSlug(fromString: $state, parentId: $get('parent_id')));
+                    $dummy = ChordPage::make([
+                        'title' => $state,
+                        'parent_id' => $get('parent_id'),
+                    ]);
+                    $dummy->generateSlug();
+
+                    $set('slug', $dummy->slug);
                 });
 
             return $this;
