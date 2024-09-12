@@ -4,12 +4,13 @@ namespace LiveSource\Chord\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use LiveSource\Chord\Concerns\HasDrafts;
+use LiveSource\Chord\Concerns\Publishable;
+use LiveSource\Chord\Contracts\Publishable as PublishableContract;
 use Wildside\Userstamps\Userstamps;
 
-class Site extends Model
+class Site extends Model implements PublishableContract
 {
-    use HasDrafts;
+    use Publishable;
     use Userstamps;
 
     protected $fillable = [

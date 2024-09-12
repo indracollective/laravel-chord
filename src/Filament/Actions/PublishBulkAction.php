@@ -9,7 +9,7 @@ use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Actions\BulkAction;
 use Illuminate\Database\Eloquent\Collection;
 
-class PublishPageBulkAction extends BulkAction
+class PublishBulkAction extends BulkAction
 {
     public static function getDefaultName(): ?string
     {
@@ -67,6 +67,12 @@ class PublishPageBulkAction extends BulkAction
                         $record->publish();
                     }
                 });
-            });
+
+                $this->success();
+            })
+            ->successNotificationTitle(fn (array $data, Collection $records) => isset($data['recursive']) || $records->count() > 1 ?
+                    str($this->getModelLabel())->plural().' published successfully' :
+                    $this->getModelLabel().' published successfully'
+            );
     }
 }

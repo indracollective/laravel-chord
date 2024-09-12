@@ -1,30 +1,18 @@
 <?php
 
-namespace LiveSource\Chord\Filament\Resources\PageResource\Pages;
+namespace LiveSource\Chord\Filament\Resources\SiteResource\Pages;
 
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Enums\IconPosition;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use LiveSource\Chord\Filament\Actions\EditPageSettingsAction;
-use LiveSource\Chord\Filament\Resources\PageResource;
-use LiveSource\Chord\Models\ChordPage;
+use LiveSource\Chord\Filament\Resources\SiteResource;
+use LiveSource\Chord\Models\Site;
 
-class EditPage extends EditRecord
+class EditSite extends EditRecord
 {
-    protected static string $resource = PageResource::class;
-
-    protected static string $view = 'chord::filament.edit-page';
-
-    protected ?string $maxContentWidth = 'full';
-
-    public function getExtraBodyAttributes(): array
-    {
-        return [
-            'class' => 'chord-edit-page',
-        ];
-    }
+    protected static string $resource = SiteResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -32,16 +20,15 @@ class EditPage extends EditRecord
             Actions\DeleteAction::make(),
             Actions\Action::make('revisions')
                 ->label('History')
-                ->url(fn (ChordPage $record) => PageResource::getUrl('revisions', ['record' => $record->uuid]))
+                ->url(fn (Site $record) => SiteResource::getUrl('revisions', ['record' => $record->uuid]))
                 ->icon('heroicon-o-clock'),
             Actions\Action::make('open')
                 ->label('Open')
-                ->url(fn (ChordPage $record) => $record->getLink(true))
+                ->url(fn (Site $record) => $record->getLink(true))
                 ->icon('heroicon-o-arrow-top-right-on-square')
                 ->iconPosition(IconPosition::After)
                 ->openUrlInNewTab()
                 ->color('primary'),
-            EditPageSettingsAction::make(),
         ];
     }
 

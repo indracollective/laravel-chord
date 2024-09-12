@@ -23,11 +23,12 @@
         "php": "^8.1",
         "codewithdennis/filament-select-tree": "^3.0",
         "filament/filament": "^3.0",
-        "oddvalue/laravel-drafts": "dev-patches",
+        "oddvalue/laravel-drafts": "^2.0",
         "robsontenorio/mary": "^1.35",
         "spatie/eloquent-sortable": "^4.4",
         "spatie/laravel-data": "^4.7",
         "spatie/laravel-package-tools": "^1.15.0",
+        "spatie/laravel-sluggable": "^3.6",
         "tightenco/parental": "^1.4",
         "wildside/userstamps": "^2.4"
     },
@@ -72,12 +73,6 @@
             }
         }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/sheadawson/laravel-drafts"
-        }
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true
 }

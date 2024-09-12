@@ -4,10 +4,9 @@ namespace LiveSource\Chord\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Collection;
 use Oddvalue\LaravelDrafts\Concerns\HasDrafts as OddvalueHasDrafts;
 
-trait HasDrafts
+trait Publishable
 {
     use OddvalueHasDrafts;
 
@@ -157,10 +156,5 @@ trait HasDrafts
         $this->children()->get()->each(fn ($child) => $child->unpublishRecursively());
 
         return $this;
-    }
-
-    public static function parentsWithUnpublishedChildren(): Collection
-    {
-        return static::class::current()->onlyDrafts()->whereNotNull('parent_id')->pluck('parent_id');
     }
 }

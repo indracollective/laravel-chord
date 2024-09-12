@@ -21,10 +21,10 @@ use LiveSource\Chord\Facades\ModifyChord;
 use LiveSource\Chord\Filament\Actions\CreateChildPageTableAction;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
 use LiveSource\Chord\Filament\Actions\EditPageTableAction;
-use Livesource\Chord\Filament\Actions\PublishPageBulkAction;
-use LiveSource\Chord\Filament\Actions\PublishPageTableAction;
-use Livesource\Chord\Filament\Actions\UnpublishPageBulkAction;
-use LiveSource\Chord\Filament\Actions\UnpublishPageTableAction;
+use Livesource\Chord\Filament\Actions\PublishBulkAction;
+use LiveSource\Chord\Filament\Actions\PublishTableAction;
+use Livesource\Chord\Filament\Actions\UnpublishBulkAction;
+use LiveSource\Chord\Filament\Actions\UnpublishTableAction;
 use LiveSource\Chord\Filament\Actions\ViewChildPagesTableAction;
 use LiveSource\Chord\Models\ChordPage;
 
@@ -178,8 +178,8 @@ class PageResource extends Resource
                         ->hidden(fn (ChordPage $record) => $record->isPublished()),
                     Tables\Actions\ActionGroup::make([
                         CreateChildPageTableAction::make(),
-                        PublishPageTableAction::make(),
-                        UnpublishPageTableAction::make(),
+                        PublishTableAction::make(),
+                        UnpublishTableAction::make(),
                     ])->dropdown(false),
                 ]),
 
@@ -187,8 +187,8 @@ class PageResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    PublishPageBulkAction::make(),
-                    UnpublishPageBulkAction::make(),
+                    PublishBulkAction::make(),
+                    UnpublishBulkAction::make(),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
@@ -229,7 +229,7 @@ class PageResource extends Resource
             'index' => PageResource\Pages\ListPages::route('/'),
             'children' => PageResource\Pages\ListPages::route('/{parent}'),
             'edit' => PageResource\Pages\EditPage::route('/{record}/edit/{revision?}'),
-            'revisions' => PageResource\Pages\ListRevisions::route('/{record?}/revisions'),
+            'revisions' => PageResource\Pages\ListPageRevisions::route('/{record?}/revisions'),
         ];
     }
 }

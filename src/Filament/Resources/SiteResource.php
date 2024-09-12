@@ -6,11 +6,13 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use LiveSource\Chord\Facades\ModifyChord;
+use LiveSource\Chord\Filament\Actions\PublishTableAction;
+use LiveSource\Chord\Filament\Actions\UnPublishTableAction;
 use LiveSource\Chord\Filament\Resources\SiteResource\Pages\ListSites;
-use LiveSource\Chord\Models\ChordPage;
 use LiveSource\Chord\Models\Site;
 
 class SiteResource extends Resource
@@ -79,10 +81,29 @@ class SiteResource extends Resource
             ->filters([
             ])
             ->actions([
-
-            ])
-            ->bulkActions([
-
+                Tables\Actions\ActionGroup::make([
+                    EditAction::make(),
+                    Tables\Actions\Action::make('revisions')
+                        ->label('History')
+                        ->url(fn (Site $record) => SiteResource::getUrl('revisions', ['record' => $record->uuid]))
+                        ->icon('heroicon-o-clock'),
+                    Tables\Actions\Action::make('view_published')
+                        ->label('View Published')
+                        ->url(fn (Site $record) => $record->getLink(true))
+                        ->openUrlInNewTab()
+                        ->icon('heroicon-o-arrow-top-right-on-square')
+                        ->hidden(fn (Site $record) => ! $record->hasPublishedVersion()),
+                    Tables\Actions\Action::make('view_revision')
+                        ->label('View Revision')
+                        ->url(fn (Site $record) => $record->getLink(true, $record->id))
+                        ->openUrlInNewTab()
+                        ->icon('heroicon-o-arrow-top-right-on-square')
+                        ->hidden(fn (Site $record) => $record->isPublished()),
+                    Tables\Actions\ActionGroup::make([
+                        PublishTableAction::make(),
+                        UnPublishTableAction::make(),
+                    ])->dropdown(false),
+                ]),
             ]);
     }
 
@@ -96,15 +117,15 @@ class SiteResource extends Resource
             Tables\Columns\TextColumn::make('creator.name')
                 ->label('Created')
                 ->prefix('By: ')
-                ->description(fn (ChordPage $record) => 'On: '.$record->created_at),
+                ->description(fn (Site $record) => 'On: '.$record->created_at),
             Tables\Columns\TextColumn::make('editor.name')
                 ->label('Updated')
                 ->prefix('By: ')
-                ->description(fn (ChordPage $record) => 'On: '.$record->updated_at),
+                ->description(fn (Site $record) => 'On: '.$record->updated_at),
             Tables\Columns\TextColumn::make('publisher.name')
                 ->label('Published')
                 ->prefix('By: ')
-                ->description(fn (ChordPage $record) => 'On: '.$record->published_at),
+                ->description(fn (Site $record) => 'On: '.$record->published_at),
         ]);
     }
 
@@ -119,8 +140,17 @@ class SiteResource extends Resource
     {
         return [
             'index' => ListSites::route('/'),
-            // 'edit' => SiteResource\Pages\EditSite::route('/{record}/edit/{revision?}'),
-            // 'revisions' => SiteResource\Pages\ListRevisions::route('/{record?}/revisions'),
+            'edit' => SiteResource\Pages\EditSite::route('/{record}/edit/{revision?}'),
+            'revisions' => SiteResource\Pages\ListSiteRevisions::route('/{record?}/revisions'),
         ];
+    }
+
+    public static function getNavigationUrl(): string
+    {
+        if (! config('chord.multisite-enabled')) {
+            return 'abc';
+        }
+
+        return parent::getNavigationUrl();
     }
 }

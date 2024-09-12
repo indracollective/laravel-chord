@@ -6,28 +6,31 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use LiveSource\Chord\Concerns\HasDrafts;
 use LiveSource\Chord\Concerns\HasSite;
 use LiveSource\Chord\Concerns\HasSortableDrafts;
 use LiveSource\Chord\Concerns\ManagesPagePaths;
+use LiveSource\Chord\Concerns\PublishableHierarchy;
 use LiveSource\Chord\Contracts\ChordPageContract;
+use LiveSource\Chord\Contracts\HasHierarchy;
+use LiveSource\Chord\Contracts\Publishable;
+use LiveSource\Chord\Contracts\PublishableHierarchy as PublishableHierarchyContract;
 use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsAction;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use Parental\HasChildren as HasInheritors;
 use Spatie\EloquentSortable\Sortable;
+use Spatie\Sluggable\HasSlug;
 use Wildside\Userstamps\Userstamps;
 
-class ChordPage extends Model implements ChordPageContract, Sortable
+class ChordPage extends Model implements ChordPageContract, HasHierarchy, Publishable, PublishableHierarchyContract, Sortable
 {
-    use HasDrafts;
     use HasInheritors;
     use HasSite;
+    use HasSlug;
     use HasSortableDrafts;
     use ManagesPagePaths;
+    use PublishableHierarchy;
     use Userstamps;
 
     protected $table = 'chord_pages';
@@ -141,26 +144,6 @@ class ChordPage extends Model implements ChordPageContract, Sortable
         return str((new \ReflectionClass(static::class))->getShortName())->toString();
     }
 
-    public function parent(): BelongsTo
-    {
-        return $this->belongsTo(ChordPage::class, 'parent_id');
-    }
-
-    public function children(): HasMany
-    {
-        return $this->hasMany(ChordPage::class, 'parent_id');
-    }
-
-    public function hasChildren(): bool
-    {
-        return $this->children()->count() > 0;
-    }
-
-    public function getChildTypes(): array
-    {
-        return Chord::getPageTypes();
-    }
-
     public function buildSortQuery(): Builder
     {
         return static::query()->where('parent_id', $this->parent_id);
@@ -174,5 +157,10 @@ class ChordPage extends Model implements ChordPageContract, Sortable
     public function getRouteKeyName()
     {
         return 'uuid';
+    }
+
+    public function getChildTypes(): array
+    {
+        return Chord::getPageTypes();
     }
 }

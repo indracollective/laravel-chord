@@ -12,7 +12,7 @@ use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use LiveSource\Chord\Models\ChordPage;
 
-class ListRevisions extends ListRecords
+class ListPageRevisions extends ListRecords
 {
     protected static string $resource = PageResource::class;
 
@@ -22,7 +22,7 @@ class ListRevisions extends ListRecords
 
     public function getHeading(): string
     {
-        return $this->getRecord()?->title . ' Revisions' ?? '?';
+        return $this->getRecord()?->title.' Revisions' ?? '?';
     }
 
     public function getRecord(): ?ChordPage
@@ -117,7 +117,7 @@ class ListRevisions extends ListRecords
                 // if search is set and parent is set, redirect to the index page with the search
                 $search = $this->getTableSearch();
                 if ($search && $parent?->id) {
-                    $this->redirect($this->getResource()::getURL('index') . "?tableSearch=$search");
+                    $this->redirect($this->getResource()::getURL('index')."?tableSearch=$search");
 
                     return $query;
                 }
@@ -168,7 +168,7 @@ class ListRevisions extends ListRecords
                         continue;
                     }
 
-                    if (! $resource::{'can' . ucfirst($action)}($record)) {
+                    if (! $resource::{'can'.ucfirst($action)}($record)) {
                         continue;
                     }
 
