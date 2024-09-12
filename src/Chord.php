@@ -4,9 +4,12 @@ namespace LiveSource\Chord;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
+use LiveSource\Chord\Models\Site;
 
 class Chord
 {
+    protected ?Site $defaultSite = null;
+
     protected array $blockTypes = [];
 
     protected array $pageTypes = [];
@@ -134,5 +137,19 @@ class Chord
     public function getBasePageClass(): string
     {
         return config('chord.base_page_class');
+    }
+
+    public function getDefaultSite(): ?Site
+    {
+        if (! $this->defaultSite) {
+            $this->setDefaultSite();
+        }
+
+        return $this->defaultSite;
+    }
+
+    public function setDefaultSite(): void
+    {
+        $this->defaultSite = Site::firstWhere('is_default', 1);
     }
 }

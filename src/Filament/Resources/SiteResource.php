@@ -2,13 +2,17 @@
 
 namespace LiveSource\Chord\Filament\Resources;
 
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Facades\ModifyChord;
 use LiveSource\Chord\Filament\Actions\PublishTableAction;
 use LiveSource\Chord\Filament\Actions\UnPublishTableAction;
@@ -30,7 +34,26 @@ class SiteResource extends Resource
     public static function form(Form $form): Form
     {
         $form->schema([
-            TextInput::make('title')->required(),
+            Tabs::make('site')->tabs([
+                Tab::make('Main')->schema([
+                    TextInput::make('hostname')
+                        ->helperText('The name of the site as it appears in the browser address bar')
+                        ->required(),
+                    TextInput::make('title')
+                        ->label('Site name')
+                        ->helperText('Human-readable name for the site.')
+                        ->required(),
+                    Toggle::make('is_default')
+                        ->label('Is default site')
+                        ->helperText('If true, this site will handle requests for all other hostnames that do not have a site entry of their own'),
+                ]),
+                Tab::make('SEO')->schema([
+
+                ]),
+                Tab::make('Access')->schema([
+
+                ]),
+            ])->columnSpan('full'),
         ]);
 
         ModifyChord::apply('siteForm', $form);
@@ -147,10 +170,15 @@ class SiteResource extends Resource
 
     public static function getNavigationUrl(): string
     {
-        if (! config('chord.multisite-enabled')) {
-            return 'abc';
-        }
+        return ! config('chord.multisite-enabled') ?
+            static::getUrl('edit', ['record' => Chord::getDefaultSite()->uuid]) :
+            parent::getNavigationUrl();
+    }
 
-        return parent::getNavigationUrl();
+    public static function getNavigationLabel(): string
+    {
+        return ! config('chord.multisite-enabled') ?
+            'Site Settings' :
+            parent::getNavigationLabel();
     }
 }
