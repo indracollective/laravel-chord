@@ -17,6 +17,7 @@ use LiveSource\Chord\Facades\ModifyChord;
 use LiveSource\Chord\Filament\Actions\PublishTableAction;
 use LiveSource\Chord\Filament\Actions\UnPublishTableAction;
 use LiveSource\Chord\Filament\Resources\SiteResource\Pages\ListSites;
+use LiveSource\Chord\Filament\Tables\PublishStatusColumn;
 use LiveSource\Chord\Models\Site;
 
 class SiteResource extends Resource
@@ -73,15 +74,7 @@ class SiteResource extends Resource
                 ->searchable(),
             Tables\Columns\IconColumn::make('is_default')
                 ->boolean(),
-            Tables\Columns\TextColumn::make('publish_statuses_string')
-                ->label('Status')
-                ->badge()
-                ->color(fn (string $state): string => match ($state) {
-                    'draft' => 'gray',
-                    'revised' => 'warning',
-                    'published' => 'success',
-                })
-                ->separator(', '),
+            PublishStatusColumn::make('publish_status'),
             Tables\Columns\TextColumn::make('creator.name')
                 ->label('Created')
                 ->prefix('By: ')
@@ -135,8 +128,7 @@ class SiteResource extends Resource
         return $table->columns([
             Tables\Columns\TextColumn::make('id'),
             Tables\Columns\TextColumn::make('title'),
-            Tables\Columns\IconColumn::make('is_published')->boolean(),
-            Tables\Columns\IconColumn::make('is_current')->boolean(),
+            PublishStatusColumn::make('publish_status'),
             Tables\Columns\TextColumn::make('creator.name')
                 ->label('Created')
                 ->prefix('By: ')

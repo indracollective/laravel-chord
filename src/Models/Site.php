@@ -8,9 +8,8 @@ use LiveSource\Chord\Concerns\Publishable;
 use LiveSource\Chord\Contracts\Publishable as PublishableContract;
 use Wildside\Userstamps\Userstamps;
 
-class Site extends Model implements PublishableContract
+class Site extends Model
 {
-    use Publishable;
     use Userstamps;
 
     protected $fillable = [

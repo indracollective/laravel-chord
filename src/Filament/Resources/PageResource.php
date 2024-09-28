@@ -26,6 +26,7 @@ use LiveSource\Chord\Filament\Actions\PublishTableAction;
 use Livesource\Chord\Filament\Actions\UnpublishBulkAction;
 use LiveSource\Chord\Filament\Actions\UnpublishTableAction;
 use LiveSource\Chord\Filament\Actions\ViewChildPagesTableAction;
+use LiveSource\Chord\Filament\Tables\PublishStatusColumn;
 use LiveSource\Chord\Models\ChordPage;
 
 class PageResource extends Resource
@@ -35,8 +36,6 @@ class PageResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $modelLabel = 'Page';
-
-    protected static ?string $recordRouteKeyName = 'uuid';
 
     protected static ?string $navigationGroup = 'CMS';
 
@@ -63,8 +62,8 @@ class PageResource extends Resource
                         ->afterStateUpdated(function (string $operation, $state, Set $set) {
                             $set('slug', str($state)->slug());
                         })
-                        ->unique(modifyRuleUsing: function (Unique $rule, $get) {
-                            return $rule->where('parent_id', $get('parent_id'))->ignore($get('uuid'));
+                        ->unique(modifyRuleUsing: function (Unique $rule, $get, Model $record) {
+                            return $rule->where('parent_id', $get('parent_id'))->ignore($get($record->getKeyName()));
                         }),
                     Select::make('type')
                         ->options($pageTypes)
@@ -120,15 +119,7 @@ class PageResource extends Resource
                     ->color('primary')
                     ->toggleable()
                     ->toggledHiddenByDefault(),
-                Tables\Columns\TextColumn::make('publish_statuses_string')
-                    ->label('Status')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'draft' => 'gray',
-                        'revised' => 'warning',
-                        'published' => 'success',
-                    })
-                    ->separator(', '),
+                PublishStatusColumn::make('publish_status'),
                 Tables\Columns\TextColumn::make('creator.name')
                     ->label('Created')
                     ->prefix('By: ')
@@ -164,7 +155,7 @@ class PageResource extends Resource
                     EditPageSettingsTableAction::make(),
                     Tables\Actions\Action::make('revisions')
                         ->label('History')
-                        ->url(fn (ChordPage $record) => PageResource::getUrl('revisions', ['record' => $record->uuid]))
+                        ->url(fn (ChordPage $record) => PageResource::getUrl('revisions', ['record' => $record->{$record->getRouteKeyName()}]))
                         ->icon('heroicon-o-clock'),
                     Tables\Actions\Action::make('view_published')
                         ->label('View Published')
@@ -201,8 +192,8 @@ class PageResource extends Resource
         return $table->columns([
             Tables\Columns\TextColumn::make('id'),
             Tables\Columns\TextColumn::make('title'),
-            Tables\Columns\IconColumn::make('is_published')->boolean(),
-            Tables\Columns\IconColumn::make('is_current')->boolean(),
+            PublishStatusColumn::make('publish_status')
+                ->showCurrentStatus(),
             Tables\Columns\TextColumn::make('creator.name')
                 ->label('Created')
                 ->prefix('By: ')

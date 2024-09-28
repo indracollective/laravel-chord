@@ -3,7 +3,7 @@
 namespace LiveSource\Chord\Models;
 
 use LiveSource\Chord\Concerns\HasContentBlocks;
-use Parental\HasParent as HasInheritance;
+use LiveSource\Chord\Concerns\HasInheritance;
 
 class ContentPage extends ChordPage
 {

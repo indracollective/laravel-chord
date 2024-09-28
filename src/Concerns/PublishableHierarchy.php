@@ -4,10 +4,7 @@ namespace LiveSource\Chord\Concerns;
 
 trait PublishableHierarchy
 {
-    use HasHierarchy;
-    use Publishable;
-
-    public function publishRecursively(): static
+    public function pubzlishRecursively(): static
     {
         $this->publish();
 

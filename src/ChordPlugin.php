@@ -4,6 +4,7 @@ namespace LiveSource\Chord;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Indra\Revisor\Middleware\DraftMiddleware;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use LiveSource\Chord\Filament\Resources\SiteResource;
 use LiveSource\Chord\Http\Middleware\PreviewMiddleware;
@@ -24,7 +25,7 @@ class ChordPlugin implements Plugin
             )
             //->discoverResources(dirname(__FILE__) . '/Filament/Resources', 'LiveSource\\Chord\\Filament\\Resources')
             ->resources([PageResource::class, SiteResource::class])
-            ->middleware([PreviewMiddleware::class], isPersistent: true);
+            ->middleware([DraftMiddleware::class], isPersistent: true);
     }
 
     public function boot(Panel $panel): void {}

@@ -32,7 +32,7 @@ class EditPage extends EditRecord
             Actions\DeleteAction::make(),
             Actions\Action::make('revisions')
                 ->label('History')
-                ->url(fn (ChordPage $record) => PageResource::getUrl('revisions', ['record' => $record->uuid]))
+                ->url(fn (ChordPage $record) => PageResource::getUrl('revisions', ['record' => $record->{$record->getRouteKeyName()}]))
                 ->icon('heroicon-o-clock'),
             Actions\Action::make('open')
                 ->label('Open')

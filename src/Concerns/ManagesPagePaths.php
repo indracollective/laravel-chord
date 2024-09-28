@@ -8,7 +8,11 @@ trait ManagesPagePaths
 {
     protected static function bootManagesPagePaths(): void
     {
-        static::saving(function (ChordPage $page) {
+        static::creating(function (ChordPage $page) {
+            $page->path = $page->generatePath();
+        });
+
+        static::updating(function (ChordPage $page) {
             $page->path = $page->generatePath();
         });
 

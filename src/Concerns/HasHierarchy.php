@@ -22,6 +22,24 @@ trait HasHierarchy
         return $this->children()->count() > 0;
     }
 
+    public function publishRecursively(): static
+    {
+        $this->publish();
+
+        $this->children()->get()->each(fn ($child) => $child->publishRecursively());
+
+        return $this;
+    }
+
+    public function unpublishRecursively(): static
+    {
+        $this->unpublish();
+
+        $this->children()->get()->each(fn ($child) => $child->unpublishRecursively());
+
+        return $this;
+    }
+
     public function getAllowedChildTypes(): array
     {
         return [];

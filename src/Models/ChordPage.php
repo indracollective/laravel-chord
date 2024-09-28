@@ -6,35 +6,36 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Indra\Revisor\Concerns\HasRevisor;
+use Indra\Revisor\Contracts\HasRevisor as HasRevisorContract;
+use LiveSource\Chord\Concerns\HasHierarchy;
+use LiveSource\Chord\Concerns\HasInheritors;
 use LiveSource\Chord\Concerns\HasSite;
 use LiveSource\Chord\Concerns\HasSortableDrafts;
 use LiveSource\Chord\Concerns\ManagesPagePaths;
-use LiveSource\Chord\Concerns\PublishableHierarchy;
 use LiveSource\Chord\Contracts\ChordPageContract;
-use LiveSource\Chord\Contracts\HasHierarchy;
-use LiveSource\Chord\Contracts\Publishable;
-use LiveSource\Chord\Contracts\PublishableHierarchy as PublishableHierarchyContract;
+use LiveSource\Chord\Contracts\HasHierarchy as HasHierarchyContract;
 use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsAction;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
-use Parental\HasChildren as HasInheritors;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Wildside\Userstamps\Userstamps;
 
-class ChordPage extends Model implements ChordPageContract, HasHierarchy, Publishable, PublishableHierarchyContract, Sortable
+class ChordPage extends Model implements ChordPageContract, HasHierarchyContract, Sortable, HasRevisorContract
 {
     use HasInheritors;
     use HasSite;
     use HasSlug;
     use HasSortableDrafts;
     use ManagesPagePaths;
-    use PublishableHierarchy;
+    use HasHierarchy;
     use Userstamps;
+    use HasRevisor;
 
-    protected $table = 'chord_pages';
+    protected string $baseTable = 'pages';
 
     protected bool $hasContentForm = true;
 
@@ -94,12 +95,12 @@ class ChordPage extends Model implements ChordPageContract, HasHierarchy, Publis
 
     public function tableRecordURL(): ?string
     {
-        return PageResource::getUrl('edit', ['record' => $this->uuid]);
+        return PageResource::getUrl('edit', ['record' => $this->{$this->getKeyName()}]);
     }
 
     public function afterCreateRedirectURL(): ?string
     {
-        return PageResource::getUrl('edit', ['record' => $this->id]);
+        return PageResource::getUrl('edit', ['record' => $this->{$this->getKeyName()}]);
     }
 
     public function settingsAction(): ?EditPageSettingsAction
@@ -155,11 +156,6 @@ class ChordPage extends Model implements ChordPageContract, HasHierarchy, Publis
         return (new static)->determineOrderColumnName();
     }
 
-    public function getRouteKeyName()
-    {
-        return 'uuid';
-    }
-
     public function getChildTypes(): array
     {
         return Chord::getPageTypes();
@@ -173,7 +169,7 @@ class ChordPage extends Model implements ChordPageContract, HasHierarchy, Publis
             ->preventOverwrite()
             ->extraScope(fn ($builder) => $builder
                 ->where('parent_id', $this->parent_id)
-                ->whereNot('uuid', $this->uuid)
+                ->whereNot('id', $this->id)
             );
     }
 }

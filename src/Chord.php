@@ -118,15 +118,16 @@ class Chord
 
     public function pagesForMenu(string $menu): Collection
     {
-        $pages = $this->getBasePageClass()::where('parent_id', null)
-            ->whereJsonContains('show_in_menus', $menu)
-            ->orderBy($this->getBasePageClass()::getOrderColumnName())
-            ->with(['children' => function ($query) {
-                $query->whereJsonContains('show_in_menus', 'header')
-                    ->orderBy($this->getBasePageClass()::getOrderColumnName())
-                    ->with(['children' => function ($query) {
-                        $query->whereJsonContains('show_in_menus', 'header')
-                            ->orderBy($this->getBasePageClass()::getOrderColumnName());
+        $pageClass = $this->getBasePageClass();
+        $pages = $pageClass::where('parent_id', null)
+            ->whereRaw("show_in_menus LIKE '%$menu%'")
+            ->orderBy($pageClass::getOrderColumnName())
+            ->with(['children' => function ($query) use ($pageClass, $menu) {
+                $query->whereRaw("show_in_menus LIKE '%$menu%'")
+                    ->orderBy($pageClass::getOrderColumnName())
+                    ->with(['children' => function ($query) use ($pageClass, $menu) {
+                        $query->whereRaw("show_in_menus LIKE '%$menu%'")
+                            ->orderBy($pageClass::getOrderColumnName());
                     }]);
             }])
             ->get();
