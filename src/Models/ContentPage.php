@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LiveSource\Chord\Models;
 
 use LiveSource\Chord\Concerns\HasContentBlocks;

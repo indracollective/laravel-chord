@@ -18,9 +18,9 @@ class EditSite extends EditRecord
     {
         return [
             Actions\DeleteAction::make(),
-            Actions\Action::make('revisions')
+            Actions\Action::make('versions')
                 ->label('History')
-                ->url(fn (Site $record) => SiteResource::getUrl('revisions', ['record' => $record->uuid]))
+                ->url(fn (Site $record) => SiteResource::getUrl('versions', ['record' => $record->getKey()]))
                 ->icon('heroicon-o-clock'),
             Actions\Action::make('open')
                 ->label('Open')

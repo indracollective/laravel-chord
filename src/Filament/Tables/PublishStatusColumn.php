@@ -3,15 +3,11 @@
 namespace LiveSource\Chord\Filament\Tables;
 
 use Filament\Tables\Columns\TextColumn;
+use Indra\Revisor\Contracts\HasRevisor;
 
 class PublishStatusColumn extends TextColumn
 {
-    public bool $showCurrentStatus = false;
-
-    public function getState(): mixed
-    {
-        return $this->getRecord()->getPublishStatuses(true);
-    }
+    public bool $showDraftStatus = false;
 
     protected function setUp(): void
     {
@@ -20,23 +16,30 @@ class PublishStatusColumn extends TextColumn
         $this
             ->label('Status')
             ->badge()
-            ->color(fn (string $state): string => match ($this->getState()) {
+            ->getStateUsing(function (HasRevisor $record) {
+                if (!$record->is_published) {
+                    return 'draft';
+                }
+
+                return $record->isRevised() ? 'published,revised' : 'published';
+            })
+            ->separator(",")
+            ->color(fn (string $state): string => match ($state) {
                 'revised' => 'warning',
                 'published' => 'success',
-                'current' => 'gray'
-            })
-            ->separator(', ');
+                'draft' => 'gray',
+            });
     }
 
-    public function showCurrentStatus(bool $showCurrentStatus = true): static
+    public function showDraftStatus(bool $showDraftStatus = true): static
     {
-        $this->showCurrentStatus = $showCurrentStatus;
+        $this->showDraftStatus = $showDraftStatus;
 
         return $this;
     }
 
-    public function getShowCurrentStatus(): bool
+    public function getShowDraftStatus(): bool
     {
-        return $this->showCurrentStatus;
+        return $this->showDraftStatus;
     }
 }

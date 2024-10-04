@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LiveSource\Chord\Concerns;
 
 use Illuminate\Support\Str;
 use Indra\Revisor\Facades\Revisor;
 use Parental\HasParent;
-use ReflectionException;
 
 trait HasInheritance
 {

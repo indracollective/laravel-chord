@@ -62,8 +62,10 @@ class PageResource extends Resource
                         ->afterStateUpdated(function (string $operation, $state, Set $set) {
                             $set('slug', str($state)->slug());
                         })
-                        ->unique(modifyRuleUsing: function (Unique $rule, $get, Model $record) {
-                            return $rule->where('parent_id', $get('parent_id'))->ignore($get($record->getKeyName()));
+                        ->unique(modifyRuleUsing: function (Unique $rule, $get, ?Model $record) {
+                            return $record ?
+                                $rule->where('parent_id', $get('parent_id'))->ignore($get($record->getKeyName())) :
+                                $rule;
                         }),
                     Select::make('type')
                         ->options($pageTypes)
@@ -153,16 +155,16 @@ class PageResource extends Resource
                 Tables\Actions\ActionGroup::make([
                     EditPageTableAction::make(),
                     EditPageSettingsTableAction::make(),
-                    Tables\Actions\Action::make('revisions')
+                    Tables\Actions\Action::make('versions')
                         ->label('History')
-                        ->url(fn (ChordPage $record) => PageResource::getUrl('revisions', ['record' => $record->{$record->getRouteKeyName()}]))
+                        ->url(fn (ChordPage $record) => PageResource::getUrl('versions', ['record' => $record->{$record->getRouteKeyName()}]))
                         ->icon('heroicon-o-clock'),
                     Tables\Actions\Action::make('view_published')
                         ->label('View Published')
                         ->url(fn (ChordPage $record) => $record->getLink(true))
                         ->openUrlInNewTab()
                         ->icon('heroicon-o-arrow-top-right-on-square')
-                        ->hidden(fn (ChordPage $record) => ! $record->hasPublishedVersion()),
+                        ->hidden(fn (ChordPage $record) => ! $record->is_published),
                     Tables\Actions\Action::make('view_revision')
                         ->label('View Revision')
                         ->url(fn (ChordPage $record) => $record->getLink(true, $record->id))
@@ -187,13 +189,13 @@ class PageResource extends Resource
             ]);
     }
 
-    public static function revisionsTable(Table $table): Table
+    public static function versionsTable(Table $table): Table
     {
         return $table->columns([
             Tables\Columns\TextColumn::make('id'),
             Tables\Columns\TextColumn::make('title'),
             PublishStatusColumn::make('publish_status')
-                ->showCurrentStatus(),
+                ->showDraftStatus(),
             Tables\Columns\TextColumn::make('creator.name')
                 ->label('Created')
                 ->prefix('By: ')
@@ -221,8 +223,8 @@ class PageResource extends Resource
         return [
             'index' => PageResource\Pages\ListPages::route('/'),
             'children' => PageResource\Pages\ListPages::route('/{parent}'),
-            'edit' => PageResource\Pages\EditPage::route('/{record}/edit/{revision?}'),
-            'revisions' => PageResource\Pages\ListPageRevisions::route('/{record?}/revisions'),
+            'edit' => PageResource\Pages\EditPage::route('/{record}/edit/{version?}'),
+            'versions' => PageResource\Pages\ListPageVersions::route('/{record?}/versions'),
         ];
     }
 }

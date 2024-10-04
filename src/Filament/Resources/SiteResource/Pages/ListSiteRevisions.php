@@ -37,7 +37,7 @@ class ListSiteRevisions extends ListRecords
     {
         $parent = $this->getRecord();
 
-        return static::getResource()::revisionsTable($table)
+        return static::getResource()::versionsTable($table)
             ->modifyQueryUsing(function (Builder $query) use ($parent): Builder {
                 return $query->withDrafts()
                     ->where('uuid', $parent->uuid)

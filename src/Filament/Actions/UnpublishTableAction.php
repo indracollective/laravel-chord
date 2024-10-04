@@ -8,6 +8,7 @@ use Filament\Support\Enums\MaxWidth;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
+use Indra\Revisor\Contracts\HasRevisor;
 use LiveSource\Chord\Contracts\HasHierarchy;
 use LiveSource\Chord\Contracts\Publishable;
 
@@ -35,12 +36,12 @@ class UnpublishTableAction extends Action
             ->modalFooterActionsAlignment(Alignment::Center)
             ->modalSubmitActionLabel(__('filament-actions::modal.actions.confirm.label'))
             ->modalWidth(MaxWidth::Medium)
-            ->hidden(fn (Publishable $record) => ! $record->isPublished())
-            ->form(function (Publishable $record) {
+            ->hidden(fn (HasRevisor $record) => ! $record->isPublished())
+            ->form(function (HasRevisor $record) {
                 if (! $record instanceof HasHierarchy) {
                     return [];
                 }
-                $children = $record->children()->published();
+                $children = $record->publishedRecord->children();
                 $numChildren = $children->count();
                 if ($numChildren === 0) {
                     return [];
@@ -55,7 +56,7 @@ class UnpublishTableAction extends Action
                         ->default(fn (Model $record) => [$record->id]),
                 ];
             })
-            ->action(function (Publishable $record, array $data) {
+            ->action(function (HasRevisor $record, array $data) {
                 if ($record instanceof HasHierarchy && in_array($record->id, $data['recursive'] ?? [])) {
                     $record->unpublishRecursively();
                 } else {

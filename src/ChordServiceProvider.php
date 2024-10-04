@@ -85,10 +85,6 @@ class ChordServiceProvider extends PackageServiceProvider
             $view->with('pagesForMenu', function (string $menu) {
                 return \LiveSource\Chord\Facades\Chord::pagesForMenu($menu);
             });
-
-            $view->with('chordComponent', function (string $component) {
-                return \LiveSource\Chord\Facades\Chord::resolveComponent($component);
-            });
         });
 
         ChordFacade::registerPageTypes([

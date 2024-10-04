@@ -26,7 +26,13 @@ trait HasContentBlocks
 
     public function blocks(): Collection
     {
-        return collect($this->content['blocks'] ?? [])->map(function ($block) {
+        $blocks = collect($this->content['blocks'] ?? []);
+
+        if ($blocks->isEmpty()) {
+            return $blocks;
+        }
+
+        return $blocks->map(function ($block) {
             $key = $block['type'] ?? null;
 
             if (! $key) {

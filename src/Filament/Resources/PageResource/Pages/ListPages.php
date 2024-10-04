@@ -10,6 +10,7 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Indra\Revisor\Facades\Revisor;
 use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Filament\Actions\CreatePageAction;
 use LiveSource\Chord\Filament\Actions\EditPageAction;
@@ -105,7 +106,6 @@ class ListPages extends ListRecords
 
         $table
             ->modifyQueryUsing(function (Builder $query) use ($parent): Builder {
-                $query->current();
                 // if search is set and parent is set, redirect to the index page with the search
                 $search = $this->getTableSearch();
                 if ($search && $parent?->id) {

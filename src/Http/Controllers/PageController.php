@@ -10,7 +10,7 @@ class PageController extends Controller
     public function __invoke(string $path = '/')
     {
         $page = ChordPage::firstWhere('path', $path);
-
+        
         if (! $page) {
             abort(404);
         }

@@ -99,9 +99,9 @@ class SiteResource extends Resource
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     EditAction::make(),
-                    Tables\Actions\Action::make('revisions')
+                    Tables\Actions\Action::make('versions')
                         ->label('History')
-                        ->url(fn (Site $record) => SiteResource::getUrl('revisions', ['record' => $record->uuid]))
+                        ->url(fn (Site $record) => SiteResource::getUrl('versions', ['record' => $record->getKey()]))
                         ->icon('heroicon-o-clock'),
                     Tables\Actions\Action::make('view_published')
                         ->label('View Published')
@@ -123,7 +123,7 @@ class SiteResource extends Resource
             ]);
     }
 
-    public static function revisionsTable(Table $table): Table
+    public static function versionsTable(Table $table): Table
     {
         return $table->columns([
             Tables\Columns\TextColumn::make('id'),
@@ -155,15 +155,15 @@ class SiteResource extends Resource
     {
         return [
             'index' => ListSites::route('/'),
-            'edit' => SiteResource\Pages\EditSite::route('/{record}/edit/{revision?}'),
-            'revisions' => SiteResource\Pages\ListSiteRevisions::route('/{record?}/revisions'),
+            'edit' => SiteResource\Pages\EditSite::route('/{record}/edit/{version?}'),
+            'versions' => SiteResource\Pages\ListSiteRevisions::route('/{record?}/versions'),
         ];
     }
 
     public static function getNavigationUrl(): string
     {
         return ! config('chord.multisite-enabled') ?
-            static::getUrl('edit', ['record' => Chord::getDefaultSite()->uuid]) :
+            static::getUrl('edit', ['record' => Chord::getDefaultSite()->getKey()]) :
             parent::getNavigationUrl();
     }
 

@@ -8,9 +8,9 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class RevisionsRelationManager extends RelationManager
+class VersionsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'revisions';
+    protected static string $relationship = 'versions';
 
     public function form(Form $form): Form
     {

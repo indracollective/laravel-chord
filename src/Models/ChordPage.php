@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace LiveSource\Chord\Models;
 
 use Filament\Forms\Components\TextInput;
@@ -26,14 +28,16 @@ use Wildside\Userstamps\Userstamps;
 
 class ChordPage extends Model implements ChordPageContract, HasHierarchyContract, Sortable, HasRevisorContract
 {
-    use HasInheritors;
+    use HasInheritors, HasRevisor {
+        HasRevisor::newInstance insteadof HasInheritors;
+    }
     use HasSite;
     use HasSlug;
     use HasSortableDrafts;
     use ManagesPagePaths;
     use HasHierarchy;
     use Userstamps;
-    use HasRevisor;
+
 
     protected string $baseTable = 'pages';
 

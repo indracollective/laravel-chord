@@ -85,37 +85,6 @@ class Chord
         return config('chord.themes');
     }
 
-    public function resolveComponent(string $component): string
-    {
-        $candidates = collect($this->getThemes())
-            ->map(fn ($theme) => $theme === 'app' ? $component : "$theme::$component")
-            ->toArray();
-
-        foreach ($candidates as $candidate) {
-            $test = str_contains($candidate, '::') ?
-                str_replace('::', '::components.', $candidate) :
-                'components.'.$candidate;
-
-            if (view()->exists($test)) {
-                return $candidate;
-            }
-
-            if (view()->exists($candidate)) {
-                dd("found $candidate");
-
-                return $candidate;
-            }
-
-            if (view()->exists($test)) {
-                dd("found $test");
-
-                return $candidate;
-            }
-        }
-
-        throw new \Exception("No components for $component exist. Possible candidates were: ".implode(', ', $candidates));
-    }
-
     public function pagesForMenu(string $menu): Collection
     {
         $pageClass = $this->getBasePageClass();

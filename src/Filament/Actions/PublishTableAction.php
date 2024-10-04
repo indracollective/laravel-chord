@@ -8,6 +8,7 @@ use Filament\Support\Enums\MaxWidth;
 use Filament\Support\Facades\FilamentIcon;
 use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
+use Indra\Revisor\Contracts\HasRevisor;
 use LiveSource\Chord\Contracts\HasHierarchy;
 use LiveSource\Chord\Contracts\Publishable;
 use LiveSource\Chord\Models\ChordPage;
@@ -36,12 +37,12 @@ class PublishTableAction extends Action
             ->modalFooterActionsAlignment(Alignment::Center)
             ->modalSubmitActionLabel(__('filament-actions::modal.actions.confirm.label'))
             ->modalWidth(MaxWidth::Medium)
-            ->hidden(fn (Publishable $record) => $record->isPublished())
-            ->form(function (Publishable $record) {
+            ->hidden(fn (HasRevisor $record) => $record->isPublished())
+            ->form(function (HasRevisor $record) {
                 if (! $record instanceof HasHierarchy) {
                     return [];
                 }
-                $children = $record->children()->current()->onlyDrafts();
+                $children = $record->children()->unpublishedOrRevised();
                 $numChildren = $children->count();
                 if ($numChildren === 0) {
                     return [];
@@ -56,7 +57,7 @@ class PublishTableAction extends Action
                         ->default(fn (ChordPage $record) => [$record->id]),
                 ];
             })
-            ->action(function (Publishable $record, array $data) {
+            ->action(function (HasRevisor $record, array $data) {
                 if ($record instanceof HasHierarchy && in_array($record->id, $data['recursive'] ?? [])) {
                     $record->publishRecursively();
                 } else {

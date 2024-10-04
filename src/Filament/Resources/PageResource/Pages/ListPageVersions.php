@@ -8,11 +8,12 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Indra\Revisor\Enums\RevisorMode;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use LiveSource\Chord\Models\ChordPage;
 
-class ListPageRevisions extends ListRecords
+class ListPageVersions extends ListRecords
 {
     protected static string $resource = PageResource::class;
 
@@ -22,14 +23,14 @@ class ListPageRevisions extends ListRecords
 
     public function getHeading(): string
     {
-        return $this->getRecord()?->title.' Revisions' ?? '?';
+        return $this->getRecord()?->title.' Versions' ?? '?';
     }
 
     public function getRecord(): ?ChordPage
     {
         if (! $this->record) {
-            if ($currentId = request()->current) {
-                $this->record = ChordPage::where('uuid', $currentId)->firstOrFail();
+            if ($recordId = request()->record) {
+                $this->record = ChordPage::where('id', $recordId)->firstOrFail();
             }
         }
 
@@ -40,13 +41,13 @@ class ListPageRevisions extends ListRecords
     {
         $parent = $this->getRecord();
 
-        return static::getResource()::revisionsTable($table)
+        return static::getResource()::versionsTable($table)
             ->modifyQueryUsing(function (Builder $query) use ($parent): Builder {
-                return $query->withDrafts()
-                    ->where('uuid', $parent->uuid)
-                    ->withoutGlobalScope('onlyCurrentInPreviewMode');
+                $query->getModel()->setRevisorMode(RevisorMode::Version);
+                $query->getQuery()->from = $query->getModel()->getTable();
+                return $query->where('record_id', $parent->getKey());
             })->recordUrl(function (Model $record, Table $table): ?string {
-                return $this->getResource()::getUrl('edit', ['record' => $record->uuid, 'revision' => $record->id]);
+                return $this->getResource()::getUrl('edit', ['record' => $record->record_id, 'version' => $record->getKey()]);
             });
     }
 
@@ -106,7 +107,7 @@ class ListPageRevisions extends ListRecords
     //        return $breadcrumbs;
     //    }
 
-    public function revisionsTable(Table $table): Table
+    public function versionsTable(Table $table): Table
     {
         $table = static::getResource()::table($table);
         $parent = $this->getRecord();
