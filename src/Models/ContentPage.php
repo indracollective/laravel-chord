@@ -12,5 +12,5 @@ class ContentPage extends ChordPage
     use HasContentBlocks;
     use HasInheritance;
 
-    protected static string $defaultLayout = 'pages.content-page';
+    protected static string $defaultLayout = 'chord::pages.content-page';
 }

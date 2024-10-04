@@ -30,7 +30,7 @@ class ChordPage extends Model implements ChordPageContract, HasHierarchyContract
 {
     use HasHierarchy;
     use HasInheritors, HasRevisor {
-        HasRevisor::newInstance insteadof HasInheritors;
+        HasInheritors::newInstance insteadof HasRevisor;
     }
     use HasSite;
     use HasSlug;
