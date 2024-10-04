@@ -9,7 +9,6 @@ trait HasInheritors
 {
     use HasChildren;
 
-
     /**
      * Overrides HasChildren::newInstance and
      * HasRevisor::newInstance to combine both
