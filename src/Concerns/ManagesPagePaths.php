@@ -32,6 +32,6 @@ trait ManagesPagePaths
             return $this->slug;
         }
 
-        return $this->parent->path.'/'.$this->slug;
+        return $this->parent->path . '/' . $this->slug;
     }
 }

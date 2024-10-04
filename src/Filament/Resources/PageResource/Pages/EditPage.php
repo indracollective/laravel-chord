@@ -54,7 +54,7 @@ class EditPage extends EditRecord
         ];
     }
 
-    protected function resolveRecord(int|string $key): Model
+    protected function resolveRecord(int | string $key): Model
     {
         $revision = request()->revision;
         if (! $revision) {

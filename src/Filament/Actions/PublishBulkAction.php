@@ -25,10 +25,11 @@ class PublishBulkAction extends BulkAction
             ->icon(FilamentIcon::resolve('heroicon-o-arrow-up-tray') ?? 'heroicon-o-arrow-up-tray')
             ->color('success')
             ->deselectRecordsAfterCompletion()
-            ->modalHeading(fn (Collection $records) => $records->count() === 1 ? 'Publish \''.$records->first()->title.'\'' : 'Publish pages')
+            ->modalHeading(fn (Collection $records) => $records->count() === 1 ? 'Publish \'' . $records->first()->title . '\'' : 'Publish pages')
             ->modalIcon(FilamentIcon::resolve('heroicon-o-arrow-up-tray') ?? 'heroicon-o-arrow-up-tray')
             ->modalIconColor('success')
-            ->modalDescription(fn (Collection $records) => $records->count() === 1 ?
+            ->modalDescription(
+                fn (Collection $records) => $records->count() === 1 ?
                 'Are you sure you want to publish this page?' :
                 'Are you sure you want to publish these pages?'
             )
@@ -70,9 +71,10 @@ class PublishBulkAction extends BulkAction
 
                 $this->success();
             })
-            ->successNotificationTitle(fn (array $data, Collection $records) => isset($data['recursive']) || $records->count() > 1 ?
-                    str($this->getModelLabel())->plural().' published successfully' :
-                    $this->getModelLabel().' published successfully'
+            ->successNotificationTitle(
+                fn (array $data, Collection $records) => isset($data['recursive']) || $records->count() > 1 ?
+                    str($this->getModelLabel())->plural() . ' published successfully' :
+                    $this->getModelLabel() . ' published successfully'
             );
     }
 }

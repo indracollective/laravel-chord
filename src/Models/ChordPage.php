@@ -26,8 +26,9 @@ use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Wildside\Userstamps\Userstamps;
 
-class ChordPage extends Model implements ChordPageContract, HasHierarchyContract, Sortable, HasRevisorContract
+class ChordPage extends Model implements ChordPageContract, HasHierarchyContract, HasRevisorContract, Sortable
 {
+    use HasHierarchy;
     use HasInheritors, HasRevisor {
         HasRevisor::newInstance insteadof HasInheritors;
     }
@@ -35,9 +36,7 @@ class ChordPage extends Model implements ChordPageContract, HasHierarchyContract
     use HasSlug;
     use HasSortableDrafts;
     use ManagesPagePaths;
-    use HasHierarchy;
     use Userstamps;
-
 
     protected string $baseTable = 'pages';
 
@@ -125,7 +124,7 @@ class ChordPage extends Model implements ChordPageContract, HasHierarchyContract
     public function getLink(bool $absolute = false, ?int $revision = null): string
     {
         $path = $this->path === '/' ? $this->path : "/$this->path";
-        $link = $absolute ? rtrim(config('app.url'), '/').$path : $path;
+        $link = $absolute ? rtrim(config('app.url'), '/') . $path : $path;
 
         return $revision ? "$link?revision=$revision" : $link;
     }
@@ -171,9 +170,10 @@ class ChordPage extends Model implements ChordPageContract, HasHierarchyContract
             ->generateSlugsFrom('title')
             ->saveSlugsTo('slug')
             ->preventOverwrite()
-            ->extraScope(fn ($builder) => $builder
-                ->where('parent_id', $this->parent_id)
-                ->whereNot('id', $this->id)
+            ->extraScope(
+                fn ($builder) => $builder
+                    ->where('parent_id', $this->parent_id)
+                    ->whereNot('id', $this->id)
             );
     }
 }

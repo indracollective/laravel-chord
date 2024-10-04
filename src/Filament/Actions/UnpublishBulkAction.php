@@ -25,10 +25,11 @@ class UnpublishBulkAction extends BulkAction
             ->icon(static::getDefaultIcon())
             ->color('warning')
             ->deselectRecordsAfterCompletion()
-            ->modalHeading(fn (Collection $records) => $records->count() === 1 ? 'Unpublish \''.$records->first()->title.'\'' : 'Unpublish pages')
+            ->modalHeading(fn (Collection $records) => $records->count() === 1 ? 'Unpublish \'' . $records->first()->title . '\'' : 'Unpublish pages')
             ->modalIcon(static::getDefaultIcon())
             ->modalIconColor('warning')
-            ->modalDescription(fn (Collection $records) => $records->count() === 1 ?
+            ->modalDescription(
+                fn (Collection $records) => $records->count() === 1 ?
                 'Are you sure you want to unpublish this page?' :
                 'Are you sure you want to unpublish these pages?'
             )
@@ -70,9 +71,10 @@ class UnpublishBulkAction extends BulkAction
 
                 $this->success();
             })
-            ->successNotificationTitle(fn (array $data, Collection $records) => isset($data['recursive']) || $records->count() > 1 ?
-                    str($this->getModelLabel())->plural().' unpublished successfully' :
-                    $this->getModelLabel().' unpublished successfully'
+            ->successNotificationTitle(
+                fn (array $data, Collection $records) => isset($data['recursive']) || $records->count() > 1 ?
+                    str($this->getModelLabel())->plural() . ' unpublished successfully' :
+                    $this->getModelLabel() . ' unpublished successfully'
             );
     }
 

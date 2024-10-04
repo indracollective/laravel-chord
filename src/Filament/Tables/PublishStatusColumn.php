@@ -17,13 +17,13 @@ class PublishStatusColumn extends TextColumn
             ->label('Status')
             ->badge()
             ->getStateUsing(function (HasRevisor $record) {
-                if (!$record->is_published) {
+                if (! $record->is_published) {
                     return 'draft';
                 }
 
                 return $record->isRevised() ? 'published,revised' : 'published';
             })
-            ->separator(",")
+            ->separator(',')
             ->color(fn (string $state): string => match ($state) {
                 'revised' => 'warning',
                 'published' => 'success',

@@ -19,7 +19,7 @@ class ListSiteRevisions extends ListRecords
 
     public function getHeading(): string
     {
-        return $this->getRecord()?->title.' Revisions' ?? '?';
+        return $this->getRecord()?->title . ' Revisions' ?? '?';
     }
 
     public function getRecord(): ?Site

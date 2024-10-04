@@ -10,7 +10,6 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Indra\Revisor\Facades\Revisor;
 use LiveSource\Chord\Facades\Chord;
 use LiveSource\Chord\Filament\Actions\CreatePageAction;
 use LiveSource\Chord\Filament\Actions\EditPageAction;

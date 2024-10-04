@@ -7,7 +7,6 @@ use Filament\Panel;
 use Indra\Revisor\Middleware\DraftMiddleware;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use LiveSource\Chord\Filament\Resources\SiteResource;
-use LiveSource\Chord\Http\Middleware\PreviewMiddleware;
 
 class ChordPlugin implements Plugin
 {
@@ -20,7 +19,7 @@ class ChordPlugin implements Plugin
     {
         $panel
             ->discoverLivewireComponents(
-                dirname(__FILE__).'/Filament/Resources/PageResource/RelationManagers',
+                dirname(__FILE__) . '/Filament/Resources/PageResource/RelationManagers',
                 'LiveSource\\Chord\\Filament\\Resources\\PageResource\\RelationManagers',
             )
             ->resources([PageResource::class, SiteResource::class])

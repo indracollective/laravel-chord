@@ -23,7 +23,7 @@ class ListPageVersions extends ListRecords
 
     public function getHeading(): string
     {
-        return $this->getRecord()?->title.' Versions' ?? '?';
+        return $this->getRecord()?->title . ' Versions' ?? '?';
     }
 
     public function getRecord(): ?ChordPage
@@ -45,6 +45,7 @@ class ListPageVersions extends ListRecords
             ->modifyQueryUsing(function (Builder $query) use ($parent): Builder {
                 $query->getModel()->setRevisorMode(RevisorMode::Version);
                 $query->getQuery()->from = $query->getModel()->getTable();
+
                 return $query->where('record_id', $parent->getKey());
             })->recordUrl(function (Model $record, Table $table): ?string {
                 return $this->getResource()::getUrl('edit', ['record' => $record->record_id, 'version' => $record->getKey()]);
@@ -118,7 +119,7 @@ class ListPageVersions extends ListRecords
                 // if search is set and parent is set, redirect to the index page with the search
                 $search = $this->getTableSearch();
                 if ($search && $parent?->id) {
-                    $this->redirect($this->getResource()::getURL('index')."?tableSearch=$search");
+                    $this->redirect($this->getResource()::getURL('index') . "?tableSearch=$search");
 
                     return $query;
                 }
@@ -169,7 +170,7 @@ class ListPageVersions extends ListRecords
                         continue;
                     }
 
-                    if (! $resource::{'can'.ucfirst($action)}($record)) {
+                    if (! $resource::{'can' . ucfirst($action)}($record)) {
                         continue;
                     }
 

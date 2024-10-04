@@ -17,7 +17,7 @@ class CreateChildPageTableAction extends Action
 {
     use CanCustomizeProcess;
 
-    protected bool|Closure $canCreateAnother = true;
+    protected bool | Closure $canCreateAnother = true;
 
     protected ?Closure $getRelationshipUsing = null;
 
@@ -109,7 +109,7 @@ class CreateChildPageTableAction extends Action
         return $this;
     }
 
-    public function createAnother(bool|Closure $condition = true): static
+    public function createAnother(bool | Closure $condition = true): static
     {
         $this->canCreateAnother = $condition;
 
@@ -119,7 +119,7 @@ class CreateChildPageTableAction extends Action
     /**
      * @deprecated Use `createAnother()` instead.
      */
-    public function disableCreateAnother(bool|Closure $condition = true): static
+    public function disableCreateAnother(bool | Closure $condition = true): static
     {
         $this->createAnother(fn (CreateChildPageTableAction $action): bool => ! $action->evaluate($condition));
 
@@ -136,7 +136,7 @@ class CreateChildPageTableAction extends Action
         return true;
     }
 
-    public function getRelationship(): Relation|Builder|null
+    public function getRelationship(): Relation | Builder | null
     {
         return $this->evaluate($this->getRelationshipUsing);
     }

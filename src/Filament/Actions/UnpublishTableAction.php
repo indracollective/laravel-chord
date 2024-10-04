@@ -10,7 +10,6 @@ use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
 use Indra\Revisor\Contracts\HasRevisor;
 use LiveSource\Chord\Contracts\HasHierarchy;
-use LiveSource\Chord\Contracts\Publishable;
 
 class UnpublishTableAction extends Action
 {
@@ -64,9 +63,10 @@ class UnpublishTableAction extends Action
                 }
                 $this->success();
             })
-            ->successNotificationTitle(fn (array $data) => isset($data['recursive']) ?
-                    str($this->getModelLabel())->plural().' unpublished successfully' :
-                    $this->getModelLabel().' unpublished successfully'
+            ->successNotificationTitle(
+                fn (array $data) => isset($data['recursive']) ?
+                    str($this->getModelLabel())->plural() . ' unpublished successfully' :
+                    $this->getModelLabel() . ' unpublished successfully'
             );
     }
 }

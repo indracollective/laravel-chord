@@ -10,7 +10,6 @@ use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
 use Indra\Revisor\Contracts\HasRevisor;
 use LiveSource\Chord\Contracts\HasHierarchy;
-use LiveSource\Chord\Contracts\Publishable;
 use LiveSource\Chord\Models\ChordPage;
 
 class PublishTableAction extends Action
@@ -66,9 +65,10 @@ class PublishTableAction extends Action
 
                 $this->success();
             })
-            ->successNotificationTitle(fn (array $data) => isset($data['recursive']) ?
-                    str($this->getModelLabel())->plural().' published successfully' :
-                    $this->getModelLabel().' published successfully'
+            ->successNotificationTitle(
+                fn (array $data) => isset($data['recursive']) ?
+                    str($this->getModelLabel())->plural() . ' published successfully' :
+                    $this->getModelLabel() . ' published successfully'
             );
     }
 }

@@ -142,7 +142,7 @@ class ChordServiceProvider extends PackageServiceProvider
 
         // Handle Stubs
         if (app()->runningInConsole()) {
-            foreach (app(Filesystem::class)->files(__DIR__.'/../stubs/') as $file) {
+            foreach (app(Filesystem::class)->files(__DIR__ . '/../stubs/') as $file) {
                 $this->publishes([
                     $file->getRealPath() => base_path("stubs/chord/{$file->getFilename()}"),
                 ], 'chord-stubs');
@@ -165,8 +165,8 @@ class ChordServiceProvider extends PackageServiceProvider
     {
         return [
             // AlpineComponent::make('chord', __DIR__ . '/../resources/dist/components/chord.js'),
-            Css::make('chord-styles', __DIR__.'/../resources/dist/chord.css'),
-            Js::make('chord-scripts', __DIR__.'/../resources/dist/chord.js'),
+            Css::make('chord-styles', __DIR__ . '/../resources/dist/chord.css'),
+            Js::make('chord-scripts', __DIR__ . '/../resources/dist/chord.js'),
         ];
     }
 

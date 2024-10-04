@@ -125,19 +125,19 @@ class PageResource extends Resource
                 Tables\Columns\TextColumn::make('creator.name')
                     ->label('Created')
                     ->prefix('By: ')
-                    ->description(fn (Model $record) => 'On: '.$record->created_at)
+                    ->description(fn (Model $record) => 'On: ' . $record->created_at)
                     ->placeholder('-')
                     ->toggleable()
                     ->toggledHiddenByDefault(),
                 Tables\Columns\TextColumn::make('editor.name')
                     ->label('Updated')
                     ->prefix('By: ')
-                    ->description(fn (Model $record) => 'On: '.$record->updated_at)
+                    ->description(fn (Model $record) => 'On: ' . $record->updated_at)
                     ->placeholder('-'),
                 Tables\Columns\TextColumn::make('publisher.name')
                     ->label('Published')
                     ->prefix('By: ')
-                    ->description(fn (Model $record) => 'On: '.$record->published_at)
+                    ->description(fn (Model $record) => 'On: ' . $record->published_at)
                     ->placeholder('-'),
             ])
             ->emptyStateHeading(function (Table $table) {
@@ -199,15 +199,15 @@ class PageResource extends Resource
             Tables\Columns\TextColumn::make('creator.name')
                 ->label('Created')
                 ->prefix('By: ')
-                ->description(fn (ChordPage $record) => 'On: '.$record->created_at),
+                ->description(fn (ChordPage $record) => 'On: ' . $record->created_at),
             Tables\Columns\TextColumn::make('editor.name')
                 ->label('Updated')
                 ->prefix('By: ')
-                ->description(fn (ChordPage $record) => 'On: '.$record->updated_at),
+                ->description(fn (ChordPage $record) => 'On: ' . $record->updated_at),
             Tables\Columns\TextColumn::make('publisher.name')
                 ->label('Published')
                 ->prefix('By: ')
-                ->description(fn (ChordPage $record) => 'On: '.$record->published_at),
+                ->description(fn (ChordPage $record) => 'On: ' . $record->published_at),
         ]);
     }
 
