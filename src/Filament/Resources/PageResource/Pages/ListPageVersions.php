@@ -48,139 +48,30 @@ class ListPageVersions extends ListRecords
 
                 return $query->where('record_id', $parent->getKey());
             })->recordUrl(function (Model $record, Table $table): ?string {
-                return $this->getResource()::getUrl('edit', ['record' => $record->record_id, 'version' => $record->getKey()]);
+                return $this->getResource()::getUrl('edit', [
+                    'record' => $record->record_id,
+                    'version' => $record->getKey()
+                ]);
             });
     }
 
-    //    protected function getHeaderActions(): array
-    //    {
-    //        $parent = $this->getParentPage();
-    //        $pageTypes = Chord::getPageTypeOptionsForSelect();
-    //
-    //        $actions = [];
-    //
-    //        if ($this->getParentPage()) {
-    //            $actions[] = Action::make('up')
-    //                ->iconbutton()
-    //                ->icon('heroicon-o-arrow-turn-left-up')
-    //                ->url(function () {
-    //                    if ($this->getParentPage()->parent_id) {
-    //                        return $this->getResource()::getUrl('children', ['parent' => $this->getParentPage()->parent_id]);
-    //                    } else {
-    //                        return $this->getResource()::getUrl('index');
-    //                    }
-    //                })
-    //                ->color('gray');
-    //        }
-    //
-    //        $actions[] = CreatePageAction::make()->fillForm(fn (): array => [
-    //            'type' => array_key_first($pageTypes),
-    //            'parent_id' => $this->getParentPage()?->id,
-    //        ]);
-    //
-    //        if ($this->getParentPage()) {
-    //            $actions[] = ActionGroup::make([
-    //                EditPageAction::make()->record($this->getParentPage())->label('Edit'),
-    //                // todo not sure why this keeps reverting to pencil icon...
-    //                EditPageSettingsAction::make()->record($this->getParentPage())->label('Configure'),
-    //            ]);
-    //        }
-    //
-    //        return $actions;
-    //    }
-
-    //    public function getBreadcrumbs(): array
-    //    {
-    //        $resource = static::getResource();
-    //        $resourceURL = $resource::getUrl();
-    //
-    //        $breadcrumbs = [
-    //            $resourceURL => $resource::getBreadcrumb(),
-    //            //...(filled($breadcrumb = $this->getBreadcrumb()) ? [$breadcrumb] : []),
-    //        ];
-    //
-    //        if ($parentPage = $this->getParentPage()) {
-    //            $breadcrumbs["$resourceURL/{$parentPage->id}"] = $parentPage->title;
-    //        }
-    //
-    //        $breadcrumbs[] = 'List';
-    //
-    //        return $breadcrumbs;
-    //    }
-
-    public function versionsTable(Table $table): Table
+    public function getBreadcrumbs(): array
     {
-        $table = static::getResource()::table($table);
-        $parent = $this->getRecord();
+        $resource = static::getResource();
+        $resourceURL = $resource::getUrl();
 
-        $table
-            ->modifyQueryUsing(function (Builder $query) use ($parent): Builder {
-                $query->current();
-                // if search is set and parent is set, redirect to the index page with the search
-                $search = $this->getTableSearch();
-                if ($search && $parent?->id) {
-                    $this->redirect($this->getResource()::getURL('index') . "?tableSearch=$search");
+        $breadcrumbs = [
+            $resourceURL => $resource::getBreadcrumb(),
+            //...(filled($breadcrumb = $this->getBreadcrumb()) ? [$breadcrumb] : []),
+        ];
 
-                    return $query;
-                }
+        if ($parentPage = $this->getRecord()) {
+            $breadcrumbs["$resourceURL/{$parentPage->id}"] = $parentPage->title;
+        }
 
-                // limit the query to the current parent or top level
-                if ($parent) {
-                    $query->where('parent_id', $parent->id);
-                } elseif (! $search) {
-                    $query->where('parent_id', null);
-                }
+        $breadcrumbs[] = 'List';
 
-                return $query;
-            })
-            // allow the PageType to update the url of the table row link
-            ->recordUrl(function (Model $record, Table $table): ?string {
-                if ($url = $record->tableRecordURL($table)) {
-                    return $url;
-                }
-
-                // fallback to default (copied from ListRecords)
-                foreach (['view', 'edit'] as $action) {
-                    $action = $table->getAction($action);
-
-                    if (! $action) {
-                        continue;
-                    }
-                    $action->record($record);
-
-                    if (($actionGroup = $action->getGroup()) instanceof HasRecord) {
-                        $actionGroup->record($record);
-                    }
-
-                    if ($action->isHidden()) {
-                        continue;
-                    }
-
-                    if (! $url = $action->getUrl()) {
-                        continue;
-                    }
-
-                    return $url;
-                }
-
-                $resource = static::getResource();
-
-                foreach (['view', 'edit'] as $action) {
-                    if (! $resource::hasPage($action)) {
-                        continue;
-                    }
-
-                    if (! $resource::{'can' . ucfirst($action)}($record)) {
-                        continue;
-                    }
-
-                    return $resource::getUrl($action, ['record' => $record]);
-                }
-
-                return null;
-            });
-
-        return $table;
+        return $breadcrumbs;
     }
 
     public function reorderTable(array $order): void

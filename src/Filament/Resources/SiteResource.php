@@ -28,8 +28,6 @@ class SiteResource extends Resource
 
     protected static ?string $modelLabel = 'Site';
 
-    protected static ?string $recordRouteKeyName = 'uuid';
-
     protected static ?string $navigationGroup = 'CMS';
 
     public static function form(Form $form): Form

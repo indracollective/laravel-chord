@@ -1,6 +1,6 @@
 @props(['page'])
 @php
-    $url = $page->getLink(true) . '?preview';
+    $url = $page->getLink(true) . '?draft';
 @endphp
 <div x-data="{
     iframe: null,

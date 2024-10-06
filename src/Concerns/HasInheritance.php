@@ -19,7 +19,7 @@ trait HasInheritance
      */
     public function getTable(): string
     {
-        return $this->table ?? Revisor::getSuffixedTableNameFor($this->getBaseTable());
+        return Revisor::getSuffixedTableNameFor($this->getBaseTable(), $this->getRevisorMode());
     }
 
     /**

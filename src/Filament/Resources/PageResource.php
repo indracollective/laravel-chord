@@ -192,10 +192,10 @@ class PageResource extends Resource
     public static function versionsTable(Table $table): Table
     {
         return $table->columns([
-            Tables\Columns\TextColumn::make('id'),
+            Tables\Columns\TextColumn::make('version_number')->label('Version'),
             Tables\Columns\TextColumn::make('title'),
-            PublishStatusColumn::make('publish_status')
-                ->showDraftStatus(),
+            Tables\Columns\IconColumn::make('is_current')->boolean(),
+            Tables\Columns\IconColumn::make('is_published')->boolean(),
             Tables\Columns\TextColumn::make('creator.name')
                 ->label('Created')
                 ->prefix('By: ')

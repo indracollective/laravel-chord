@@ -47,9 +47,4 @@ class Site extends Model
     {
         return $this->hasMany(ChordPage::class, 'site_id');
     }
-
-    public function getRouteKeyName()
-    {
-        return 'uuid';
-    }
 }
