@@ -6,10 +6,7 @@ use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Enums\IconPosition;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Indra\Revisor\Contracts\HasRevisor;
-use Indra\Revisor\Enums\RevisorMode;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use LiveSource\Chord\Models\ChordPage;
@@ -72,7 +69,7 @@ class EditPage extends EditRecord
         parent::save(false, false);
 
         $this->dispatch('page-updated');
-     }
+    }
 
     public function save(bool $shouldRedirect = true, bool $shouldSendSavedNotification = true): void
     {

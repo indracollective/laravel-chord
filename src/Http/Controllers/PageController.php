@@ -3,7 +3,6 @@
 namespace LiveSource\Chord\Http\Controllers;
 
 use Illuminate\Routing\Controller;
-use Indra\Revisor\Facades\Revisor;
 use LiveSource\Chord\Models\ChordPage;
 
 class PageController extends Controller

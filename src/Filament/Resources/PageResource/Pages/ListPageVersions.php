@@ -2,7 +2,6 @@
 
 namespace LiveSource\Chord\Filament\Resources\PageResource\Pages;
 
-use Filament\Actions\Contracts\HasRecord;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Table;
