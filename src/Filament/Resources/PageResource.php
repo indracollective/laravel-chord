@@ -223,8 +223,9 @@ class PageResource extends Resource
         return [
             'index' => PageResource\Pages\ListPages::route('/'),
             'children' => PageResource\Pages\ListPages::route('/{parent}'),
-            'edit' => PageResource\Pages\EditPage::route('/{record}/edit/{version?}'),
+            'edit' => PageResource\Pages\EditPage::route('/{record}/edit'),
             'versions' => PageResource\Pages\ListPageVersions::route('/{record?}/versions'),
+            'version' => PageResource\Pages\ViewPageVersion::route('/{record}/version/{version}'),
         ];
     }
 }

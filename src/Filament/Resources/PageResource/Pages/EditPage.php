@@ -57,26 +57,6 @@ class EditPage extends EditRecord
         ];
     }
 
-    protected function resolveRecord(int | string $key): Model
-    {
-        $version = request()->version;
-
-        if (! $version) {
-            return parent::resolveRecord($key);
-        }
-
-        $record = app(static::getModel())
-            ->setRevisorMode(RevisorMode::Version)
-            ->resolveRouteBindingQuery($this->getResource()::getEloquentQuery(), $key, 'record_id')
-            ->firstWhere('id', $version);
-
-        if ($record === null) {
-            throw (new ModelNotFoundException)->setModel($this->getModel(), [$key]);
-        }
-
-        return $record;
-    }
-
     public function liveSave(): void
     {
         $record = $this->getRecord();

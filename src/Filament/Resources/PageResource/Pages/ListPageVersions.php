@@ -48,9 +48,9 @@ class ListPageVersions extends ListRecords
 
                 return $query->where('record_id', $parent->getKey());
             })->recordUrl(function (Model $record, Table $table): ?string {
-                return $this->getResource()::getUrl('edit', [
+                return $this->getResource()::getUrl('version', [
                     'record' => $record->record_id,
-                    'version' => $record->getKey()
+                    'version' => $record->id,
                 ]);
             });
     }
