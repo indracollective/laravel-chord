@@ -24,7 +24,7 @@ class PublishTableAction extends Action
         parent::setUp();
 
         $this
-            ->label('Publish')
+            ->label(fn (HasRevisor $record) => $record->isPublished() ? 'Publish Changes' : 'Publish')
             ->icon(FilamentIcon::resolve('heroicon-o-arrow-up-tray') ?? 'heroicon-o-arrow-up-tray')
             ->color('success')
             ->deselectRecordsAfterCompletion()
@@ -36,7 +36,7 @@ class PublishTableAction extends Action
             ->modalFooterActionsAlignment(Alignment::Center)
             ->modalSubmitActionLabel(__('filament-actions::modal.actions.confirm.label'))
             ->modalWidth(MaxWidth::Medium)
-            ->hidden(fn (HasRevisor $record) => $record->isPublished())
+            ->hidden(fn (HasRevisor $record) => !$record->isUnpublishedOrRevised())
             ->form(function (HasRevisor $record) {
                 if (! $record instanceof HasHierarchy) {
                     return [];

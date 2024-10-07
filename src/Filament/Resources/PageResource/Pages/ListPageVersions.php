@@ -6,8 +6,6 @@ use Filament\Resources\Pages\ListRecords;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Indra\Revisor\Enums\RevisorMode;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsTableAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use LiveSource\Chord\Models\ChordPage;
@@ -22,7 +20,7 @@ class ListPageVersions extends ListRecords
 
     public function getHeading(): string
     {
-        return $this->getRecord()?->title . ' Versions' ?? '?';
+        return $this->getRecord()?->title.' Versions' ?? '?';
     }
 
     public function getRecord(): ?ChordPage
@@ -43,11 +41,6 @@ class ListPageVersions extends ListRecords
         return static::getResource()::versionsTable($table)
             ->modifyQueryUsing(function (Builder $query) use ($parent): Builder {
                 return $query->withVersionRecords()->where('record_id', $parent->getKey());
-            })->recordUrl(function (Model $record, Table $table): ?string {
-                return $this->getResource()::getUrl('version', [
-                    'record' => $record->record_id,
-                    'version' => $record->id,
-                ]);
             });
     }
 
