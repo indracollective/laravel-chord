@@ -51,10 +51,7 @@ class ViewPageVersion extends ViewRecord
 
     protected function resolveRecord(int | string $key): Model
     {
-        $record = app(static::getModel())->setRevisorMode(RevisorMode::Version);
-        $query = $this->getResource()::getEloquentQuery();
-        $query->getQuery()->from = $record->getTable();
-        $record = $record->find(request()->version);
+        $record = app(static::getModel())->withVersionRecords()->find(request()->version);
 
         if ($record === null) {
             throw (new ModelNotFoundException)->setModel($this->getModel(), [$key]);

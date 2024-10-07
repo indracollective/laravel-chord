@@ -42,10 +42,7 @@ class ListPageVersions extends ListRecords
 
         return static::getResource()::versionsTable($table)
             ->modifyQueryUsing(function (Builder $query) use ($parent): Builder {
-                $query->getModel()->setRevisorMode(RevisorMode::Version);
-                $query->getQuery()->from = $query->getModel()->getTable();
-
-                return $query->where('record_id', $parent->getKey());
+                return $query->withVersionRecords()->where('record_id', $parent->getKey());
             })->recordUrl(function (Model $record, Table $table): ?string {
                 return $this->getResource()::getUrl('version', [
                     'record' => $record->record_id,
