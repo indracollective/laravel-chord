@@ -36,7 +36,7 @@ class PublishTableAction extends Action
             ->modalFooterActionsAlignment(Alignment::Center)
             ->modalSubmitActionLabel(__('filament-actions::modal.actions.confirm.label'))
             ->modalWidth(MaxWidth::Medium)
-            ->hidden(fn (HasRevisor $record) => !$record->isUnpublishedOrRevised())
+            ->hidden(fn (HasRevisor $record) => ! $record->isUnpublishedOrRevised())
             ->form(function (HasRevisor $record) {
                 if (! $record instanceof HasHierarchy) {
                     return [];

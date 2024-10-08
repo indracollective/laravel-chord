@@ -8,7 +8,7 @@ use LiveSource\Chord\Models\ChordPage;
 
 class CreatePageAction extends CreateAction
 {
-    public string|int|null $parent_id = null;
+    public string | int | null $parent_id = null;
 
     protected function setUp(): void
     {

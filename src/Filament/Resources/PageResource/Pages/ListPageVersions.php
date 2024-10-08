@@ -20,7 +20,7 @@ class ListPageVersions extends ListRecords
 
     public function getHeading(): string
     {
-        return $this->getRecord()?->title.' Versions' ?? '?';
+        return $this->getRecord()?->title . ' Versions' ?? '?';
     }
 
     public function getRecord(): ?ChordPage

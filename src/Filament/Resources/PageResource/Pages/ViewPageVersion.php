@@ -8,7 +8,6 @@ use Filament\Support\Enums\IconPosition;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Indra\Revisor\Contracts\HasRevisor;
-use Indra\Revisor\Enums\RevisorMode;
 use LiveSource\Chord\Filament\Actions\EditPageSettingsAction;
 use LiveSource\Chord\Filament\Resources\PageResource;
 use LiveSource\Chord\Models\ChordPage;
